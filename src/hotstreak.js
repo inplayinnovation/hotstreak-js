@@ -41,6 +41,8 @@ class HotStreak {
   async subscribe(callback) {
     await this.fetchGames();
 
+    Object.values(this._games).forEach(game => callback(game));
+
     const channel = this._pusherClient.subscribe(GAMES_CHANNEL);
     channel.bind('update', data => {
       const {
@@ -75,7 +77,33 @@ class HotStreak {
         opponent.score = scores[opponentId];
       });
 
-      callback(this._games[gameId]);
+      const parsePrediction = prediction => {
+        const [affinity, signature] = prediction;
+        const [predictionComponents] = signature.split(':');
+        const [
+          participantId,
+          beginClock,
+          endClock,
+          line,
+          overProbability,
+          statCategory,
+          predictedAt
+        ] = predictionComponents.split(',');
+
+        return {
+          affinity,
+          beginClock: parseInt(beginClock),
+          endClock: parseInt(endClock),
+          line: parseFloat(line),
+          overProbability: parseFloat(overProbability),
+          participant: `Participant:${participantId}`,
+          predictedAt: parseFloat(predictedAt),
+          signature,
+          statCategory
+        };
+      };
+
+      callback(this._games[gameId], predictions.map(parsePrediction));
     });
   }
 }

@@ -6,4 +6,5 @@ const HAAS_TOKEN =
 const hotstreak = new HotStreak(HAAS_TOKEN);
 hotstreak.subscribe((game, predictions) => {
   console.log(game);
+  console.log(predictions);
 });
