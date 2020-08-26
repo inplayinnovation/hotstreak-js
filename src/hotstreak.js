@@ -15,13 +15,11 @@ const PUSHER_CLUSTER = 'us3';
 
 class HotStreak {
   constructor(haasToken) {
-    this._haasToken = haasToken;
-
     const headers = {
       Authorization: `Bearer ${haasToken}`
     };
 
-    this.graphQLClient = new GraphQLClient(GRAPHQL_ENDPOINT, { headers });
+    this._graphQLClient = new GraphQLClient(GRAPHQL_ENDPOINT, { headers });
     this._pusherClient = new Pusher(PUSHER_APP_KEY, {
       auth: { headers },
       authEndpoint: PUSHER_AUTH_ENDPOINT,
@@ -32,7 +30,7 @@ class HotStreak {
   async fetchGames() {
     this._games = {};
 
-    const { games } = await this.graphQLClient.request(GAMES_QUERY);
+    const { games } = await this._graphQLClient.request(GAMES_QUERY);
     games.forEach(game => {
       this._games[game.id] = game;
     });
@@ -77,34 +75,34 @@ class HotStreak {
         opponent.score = scores[opponentId];
       });
 
-      const parsePrediction = prediction => {
-        const [affinity, signature] = prediction;
-        const [predictionComponents] = signature.split(':');
-        const [
-          participantId,
-          beginClock,
-          endClock,
-          line,
-          overProbability,
-          statCategory,
-          predictedAt
-        ] = predictionComponents.split(',');
-
-        return {
-          affinity,
-          beginClock: parseInt(beginClock),
-          endClock: parseInt(endClock),
-          line: parseFloat(line),
-          overProbability: parseFloat(overProbability),
-          participant: `Participant:${participantId}`,
-          predictedAt: parseFloat(predictedAt),
-          signature,
-          statCategory
-        };
-      };
-
-      callback(this._games[gameId], predictions.map(parsePrediction));
+      callback(this._games[gameId], predictions.map(this._parsePrediction));
     });
+  }
+
+  _parsePrediction(prediction) {
+    const [affinity, signature] = prediction;
+    const [predictionComponents] = signature.split(':');
+    const [
+      participantId,
+      beginClock,
+      endClock,
+      line,
+      overProbability,
+      statCategory,
+      predictedAt
+    ] = predictionComponents.split(',');
+
+    return {
+      affinity,
+      beginClock: parseInt(beginClock),
+      endClock: parseInt(endClock),
+      line: parseFloat(line),
+      overProbability: parseFloat(overProbability),
+      participant: `Participant:${participantId}`,
+      predictedAt: parseFloat(predictedAt),
+      signature,
+      statCategory
+    };
   }
 }
 
