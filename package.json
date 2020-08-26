@@ -1,0 +1,7 @@
+{
+  "name": "hotstreak",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Gianni Settino <gianni.settino@gmail.com>",
+  "license": "MIT"
+}
