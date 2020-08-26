@@ -2,6 +2,11 @@
   "name": "hotstreak",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "Gianni Settino <gianni.settino@gmail.com>",
-  "license": "MIT"
+  "author": "Gianni Settino <gianni@unblockable.com>",
+  "license": "MIT",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "graphql": "^15.3.0",
+    "graphql-request": "^3.0.0"
+  }
 }
