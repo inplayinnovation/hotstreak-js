@@ -12,10 +12,6 @@ class API {
     return games;
   }
 
-  leaguesQuery() {
-    //
-  }
-
   async systemQuery() {
     const { system } = await this._graphQLClient.request(SYSTEM_QUERY);
     return system;
