@@ -1,47 +1,46 @@
-import { GraphQLClient } from 'graphql-request';
+import API from './graphql/api';
+import jwt from 'jsonwebtoken';
 import Pusher from 'pusher-js';
-
-import { GAMES_QUERY } from './queries';
-
-const BASE_URL = 'https://ft-api-staging.herokuapp.com/';
-
-const GRAPHQL_ENDPOINT = BASE_URL + 'graphql';
-const PUSHER_AUTH_ENDPOINT = BASE_URL + 'pusher/auth';
-
-const GAMES_CHANNEL = 'private-ft-api-staging-games';
-
-const PUSHER_APP_KEY = '383bdae328e791882d83';
-const PUSHER_CLUSTER = 'us3';
+import Store from './store';
 
 class HotStreak {
-  constructor(haasToken) {
-    const headers = {
-      Authorization: `Bearer ${haasToken}`
+  constructor(options) {
+    const { baseUrl, key, secret, subject } = options;
+    const token = options.token || jwt.sign({ iss: key, subject }, secret);
+
+    this._baseUrl = baseUrl;
+    this._headers = {
+      Authorization: `Bearer ${token}`
     };
 
-    this._graphQLClient = new GraphQLClient(GRAPHQL_ENDPOINT, { headers });
-    this._pusherClient = new Pusher(PUSHER_APP_KEY, {
-      auth: { headers },
-      authEndpoint: PUSHER_AUTH_ENDPOINT,
-      cluster: PUSHER_CLUSTER
+    this._api = new API(this._baseUrl, this._headers);
+    this._store = new Store();
+  }
+
+  async _initializePusherClient() {
+    if (this._pusher) {
+      return;
+    }
+
+    const { pusherAppKey, pusherCluster } = await this._api.systemQuery();
+    this._pusher = new Pusher(pusherAppKey, {
+      auth: { headers: this._headers },
+      authEndpoint: this._baseUrl + 'pusher/auth',
+      cluster: pusherCluster
     });
   }
 
   async fetchGames() {
-    this._games = {};
-
-    const { games } = await this._graphQLClient.request(GAMES_QUERY);
-    games.forEach(game => {
-      this._games[game.id] = game;
-    });
+    const games = await this._api.gamesQuery();
+    return this._store.pushGames(games);
   }
 
-  async subscribe(callback) {
-    await this.fetchGames();
+  async subscribeToGame(gameId, callback) {
+    callback(this._store.entities);
 
-    Object.values(this._games).forEach(game => callback(game));
-
-    const channel = this._pusherClient.subscribe(GAMES_CHANNEL);
+    await this._initializePusherClient();
+    const game = this._store.entities.games[gameId];
+    const channel = this._pusher.subscribe(game.broadcastChannel);
     channel.bind('update', data => {
       const {
         clocks,
@@ -62,7 +61,7 @@ class HotStreak {
       this._lastTimestamp = timestamp;
 
       const gameId = `Game:${id}`;
-      Object.assign(this._games[gameId], {
+      Object.assign(this._store.entities.games[gameId], {
         clock,
         elapsed,
         event,
@@ -70,39 +69,15 @@ class HotStreak {
         status
       });
 
-      this._games[gameId].opponents.forEach(opponent => {
-        const opponentId = opponent.id.split(':')[1];
-        opponent.score = scores[opponentId];
-      });
+      for (const [key, value] of Object.entries(scores)) {
+        const opponentId = `Opponent:${key}`;
+        this._store.entities.opponents[opponentId].score = value;
+      }
 
-      callback(this._games[gameId], predictions.map(this._parsePrediction));
+      this._store.pushPredictions(predictions, gameId);
+
+      callback(this._store.entities);
     });
-  }
-
-  _parsePrediction(prediction) {
-    const [affinity, signature] = prediction;
-    const [predictionComponents] = signature.split(':');
-    const [
-      participantId,
-      beginClock,
-      endClock,
-      line,
-      overProbability,
-      statCategory,
-      predictedAt
-    ] = predictionComponents.split(',');
-
-    return {
-      affinity,
-      beginClock: parseInt(beginClock),
-      endClock: parseInt(endClock),
-      line: parseFloat(line),
-      overProbability: parseFloat(overProbability),
-      participant: `Participant:${participantId}`,
-      predictedAt: parseFloat(predictedAt),
-      signature,
-      statCategory
-    };
   }
 }
 

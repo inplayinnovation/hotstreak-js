@@ -8,6 +8,8 @@
     "esm": "^3.2.25",
     "graphql": "^15.3.0",
     "graphql-request": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "normalizr": "^3.6.0",
     "pusher-js": "^7.0.0"
   }
 }
