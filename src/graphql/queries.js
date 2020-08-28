@@ -41,6 +41,7 @@ const GAMES_QUERY = gql`
 const SYSTEM_QUERY = gql`
   {
     system {
+      gamesChannel
       pusherAppKey
       pusherCluster
     }

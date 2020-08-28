@@ -21,7 +21,8 @@ class HotStreak {
       return;
     }
 
-    const { pusherAppKey, pusherCluster } = await this._api.systemQuery();
+    const { gamesChannel, pusherAppKey, pusherCluster } = await this._api.systemQuery();
+    this._gamesChannel = gamesChannel;
     this._pusher = new Pusher(pusherAppKey, {
       auth: { headers: this._headers },
       authEndpoint: this._baseUrl + 'pusher/auth',
@@ -40,12 +41,10 @@ class HotStreak {
     return games;
   }
 
-  async subscribeToGame(gameId, callback) {
-    const game = this._games[gameId];
-    callback(game, []);
-
+  async _subscribeToChannel(channelName, callback) {
+    await this.fetchGames();
     await this._initializePusherClient();
-    const channel = this._pusher.subscribe(game.broadcastChannel);
+    const channel = this._pusher.subscribe(channelName);
     channel.bind('update', data => {
       const {
         clocks,
@@ -81,6 +80,19 @@ class HotStreak {
 
       callback(this._games[gameId], predictions.map(parsePrediction));
     });
+  }
+
+  async subscribeToGame(gameId, callback) {
+    const game = this._games[gameId];
+    this._subscribeToChannel(game.broadcastChannel, callback);
+  }
+
+  async subscribeToGames(callback) {
+    if (!this._gamesChannel) {
+      await this._initializePusherClient();
+    }
+
+    this._subscribeToChannel(this._gamesChannel, callback);
   }
 }
 
