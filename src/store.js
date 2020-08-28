@@ -1,24 +1,29 @@
 import { denormalize, normalize, schema } from 'normalizr';
 
+const game = new schema.Entity('games');
 const league = new schema.Entity('leagues');
+const opponent = new schema.Entity('opponents');
+const participant = new schema.Entity('participant');
 const player = new schema.Entity('players');
+const prediction = new schema.Entity('predictions');
 const team = new schema.Entity('teams');
 
-const participant = new schema.Entity('participant', {
-  player
-});
-const opponent = new schema.Entity('opponents', {
-  participants: [participant],
-  team
-});
-const prediction = new schema.Entity('predictions', {
-  participant
-});
-
-const game = new schema.Entity('games', {
+game.define({
   league,
   opponents: [opponent],
   predictions: [prediction]
+});
+opponent.define({
+  participants: [participant],
+  team
+});
+participant.define({
+  opponent,
+  player
+});
+prediction.define({
+  game,
+  participant
 });
 
 class Store {
