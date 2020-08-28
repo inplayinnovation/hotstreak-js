@@ -4,6 +4,10 @@
   "main": "index.js",
   "author": "Gianni Settino <gianni@unblockable.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unblockable/hotstreak-js.git"
+  },
   "dependencies": {
     "esm": "^3.2.25",
     "graphql": "^15.3.0",
