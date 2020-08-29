@@ -25,7 +25,7 @@ class HotStreak {
     this._gamesChannel = gamesChannel;
     this._pusher = new Pusher(pusherAppKey, {
       auth: { headers: this._headers },
-      authEndpoint: this._baseUrl + 'pusher/auth',
+      authEndpoint: this._baseUrl + '/pusher/auth',
       cluster: pusherCluster
     });
   }

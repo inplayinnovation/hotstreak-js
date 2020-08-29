@@ -4,7 +4,7 @@ import { GAMES_QUERY, SYSTEM_QUERY } from './queries';
 
 class API {
   constructor(baseUrl, headers) {
-    this._graphQLClient = new GraphQLClient(baseUrl + 'graphql', { headers });
+    this._graphQLClient = new GraphQLClient(baseUrl + '/graphql', { headers });
   }
 
   async gamesQuery() {
