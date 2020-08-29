@@ -21,7 +21,12 @@ class HotStreak {
       return;
     }
 
-    const { gamesChannel, pusherAppKey, pusherCluster } = await this._api.systemQuery();
+    const {
+      gamesChannel,
+      pusherAppKey,
+      pusherCluster
+    } = await this._api.systemQuery();
+
     this._gamesChannel = gamesChannel;
     this._pusher = new Pusher(pusherAppKey, {
       auth: { headers: this._headers },
@@ -30,19 +35,11 @@ class HotStreak {
     });
   }
 
-  async fetchGames() {
-    this._games = {};
-
-    const games = await this._api.gamesQuery();
-    games.forEach(game => {
-      this._games[game.id] = game;
-    });
-
-    return games;
+  fetchGames() {
+    return this._api.gamesQuery();
   }
 
-  async _subscribeToChannel(channelName, callback) {
-    await this.fetchGames();
+  async subscribeToChannel(channelName, callback) {
     await this._initializePusherClient();
     const channel = this._pusher.subscribe(channelName);
     channel.bind('update', data => {
@@ -64,35 +61,29 @@ class HotStreak {
 
       this._lastTimestamp = timestamp;
 
-      const gameId = `Game:${id}`;
-      Object.assign(this._games[gameId], {
+      const game = {
+        id: `Game:${id}`,
         clock,
         elapsed,
         event,
         period,
-        status
-      });
+        status,
+        opponents: Object.keys(scores).map(id => ({
+          id: `Opponent:${id}`,
+          score: scores[id]
+        }))
+      };
 
-      this._games[gameId].opponents.forEach(opponent => {
-        const opponentId = opponent.id.split(':')[1];
-        opponent.score = scores[opponentId];
-      });
-
-      callback(this._games[gameId], predictions.map(parsePrediction));
+      callback(game, predictions.map(parsePrediction));
     });
   }
 
-  async subscribeToGame(gameId, callback) {
-    const game = this._games[gameId];
-    this._subscribeToChannel(game.broadcastChannel, callback);
-  }
-
-  async subscribeToGames(callback) {
+  async subscribeToAllGames(callback) {
     if (!this._gamesChannel) {
       await this._initializePusherClient();
     }
 
-    this._subscribeToChannel(this._gamesChannel, callback);
+    return this.subscribeToChannel(this._gamesChannel, callback);
   }
 }
 

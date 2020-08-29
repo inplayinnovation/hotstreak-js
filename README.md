@@ -36,16 +36,7 @@ Subscribing to one game:
 
 ```javascript
 const games = await hotstreak.fetchGames();
-hotstreak.subscribeToGame(games[0].id, (game, predictions) => {
-  console.log(game);
-  console.log(predictions);
-});
-```
-
-Subscribing to all games:
-
-```javascript
-hotstreak.subscribeToGames((game, predictions) => {
+hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, predictions) => {
   console.log(game);
   console.log(predictions);
 });
