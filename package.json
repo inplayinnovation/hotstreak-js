@@ -2,6 +2,7 @@
   "name": "hotstreak",
   "version": "1.0.1",
   "main": "index.js",
+  "module": "src/hotstreak.js",
   "author": "Gianni Settino <gianni@unblockable.com>",
   "license": "MIT",
   "repository": {
