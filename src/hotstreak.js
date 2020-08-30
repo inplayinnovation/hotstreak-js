@@ -1,18 +1,29 @@
 import API from './graphql/api';
-import { parsePrediction } from './helpers';
+import { parseMarket } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
   constructor(options) {
-    const { baseUrl, key, secret, subject } = options;
-
-    let token = options.token;
-    if (!token) {
-      const jwt = require('jsonwebtoken');
-      token = jwt.sign({ iss: key, subject }, secret);
-    }
+    const { baseUrl, key, secret, subject, token } = options;
 
     this._baseUrl = baseUrl;
+    this._key = key;
+    this._secret = secret;
+    this._subject = subject;
+    this._token = token;
+  }
+
+  async _initializeAPI() {
+    if (this._api) {
+      return;
+    }
+
+    let token = this._token;
+    if (!token) {
+      const jwt = await import('jsonwebtoken');
+      token = jwt.sign({ iss: this._key, subject: this._subject }, this._secret);
+    }
+
     this._headers = {
       Authorization: `Bearer ${token}`
     };
@@ -24,6 +35,8 @@ class HotStreak {
     if (this._pusher) {
       return;
     }
+
+    await this._initializeAPI();
 
     const {
       gamesChannel,
@@ -39,7 +52,8 @@ class HotStreak {
     });
   }
 
-  fetchGames() {
+  async fetchGames() {
+    await this._initializeAPI();
     return this._api.gamesQuery();
   }
 
@@ -78,7 +92,7 @@ class HotStreak {
         }))
       };
 
-      callback(game, predictions.map(parsePrediction));
+      callback(game, predictions.map(parseMarket));
     });
   }
 

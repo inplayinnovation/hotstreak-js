@@ -1,6 +1,6 @@
 # HotStreak JavaScript SDK
 
-The HotStreak JavaScript SDK provides convenient access to HotStreak's real-time prediction feeds.
+The HotStreak JavaScript SDK provides convenient access to HotStreak's real-time market feeds.
 
 ## Installation
 
@@ -50,8 +50,8 @@ Subscribing to one game:
 
 ```javascript
 const games = await hotstreak.fetchGames();
-hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, predictions) => {
+hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, markets) => {
   console.log(game);
-  console.log(predictions);
+  console.log(markets);
 });
 ```
