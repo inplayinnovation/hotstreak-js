@@ -1,29 +1,14 @@
 import API from './graphql/api';
+import JWT from './jwt';
 import { parseMarket } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
   constructor(options) {
-    const { baseUrl, key, secret, subject, token } = options;
+    const { baseUrl, key, secret, subject } = options;
+    const token = options.token || JWT.sign(key, subject, secret);
 
     this._baseUrl = baseUrl;
-    this._key = key;
-    this._secret = secret;
-    this._subject = subject;
-    this._token = token;
-  }
-
-  async _initializeAPI() {
-    if (this._api) {
-      return;
-    }
-
-    let token = this._token;
-    if (!token) {
-      const jwt = await import('jsonwebtoken');
-      token = jwt.sign({ iss: this._key, subject: this._subject }, this._secret);
-    }
-
     this._headers = {
       Authorization: `Bearer ${token}`
     };
@@ -35,8 +20,6 @@ class HotStreak {
     if (this._pusher) {
       return;
     }
-
-    await this._initializeAPI();
 
     const {
       gamesChannel,
@@ -53,7 +36,6 @@ class HotStreak {
   }
 
   async fetchGames() {
-    await this._initializeAPI();
     return this._api.gamesQuery();
   }
 
