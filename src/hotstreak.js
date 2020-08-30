@@ -1,12 +1,16 @@
 import API from './graphql/api';
-import jwt from 'jsonwebtoken';
 import { parsePrediction } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
   constructor(options) {
     const { baseUrl, key, secret, subject } = options;
-    const token = options.token || jwt.sign({ iss: key, subject }, secret);
+
+    let token = options.token;
+    if (!token) {
+      const jwt = require('jsonwebtoken');
+      token = jwt.sign({ iss: key, subject }, secret);
+    }
 
     this._baseUrl = baseUrl;
     this._headers = {
