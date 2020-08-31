@@ -1,6 +1,6 @@
-function parsePrediction(prediction) {
-  const [affinity, signature] = prediction;
-  const [predictionComponents] = signature.split(':');
+function parseMarket(market) {
+  const [affinity, signature] = market;
+  const [marketComponents] = signature.split(':');
   const [
     participantId,
     beginClock,
@@ -9,7 +9,7 @@ function parsePrediction(prediction) {
     overProbability,
     statCategory,
     predictedAt
-  ] = predictionComponents.split(',');
+  ] = marketComponents.split(',');
 
   return {
     id: `${participantId}:${statCategory}`,
@@ -25,4 +25,4 @@ function parsePrediction(prediction) {
   };
 }
 
-export { parsePrediction };
+export { parseMarket };
