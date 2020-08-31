@@ -1,6 +1,5 @@
 import API from './graphql/api';
 import JWT from './jwt';
-import { parseMarket } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
@@ -43,16 +42,7 @@ class HotStreak {
     await this._initializePusherClient();
     const channel = this._pusher.subscribe(channelName);
     channel.bind('update', data => {
-      const {
-        clocks,
-        id,
-        event,
-        predictions,
-        scores,
-        status,
-        timestamp
-      } = data;
-
+      const { clocks, id, event, markets, scores, status, timestamp } = data;
       const { clock, elapsed, period } = clocks.game;
 
       if (this._lastTimestamp && timestamp < this._lastTimestamp) {
@@ -74,7 +64,21 @@ class HotStreak {
         }))
       };
 
-      callback(game, predictions.map(parseMarket));
+      const parsedMarkets = Object.keys(markets).map(id => {
+        const [probability, line, duration] = markets[id].split(',');
+        const [target, category, position = null] = id.split(',');
+        return {
+          id,
+          target,
+          lines: [parseFloat(line)],
+          probabilities: [parseFloat(probability)],
+          durations: [parseFloat(duration)],
+          category,
+          position
+        };
+      });
+
+      callback(game, parsedMarkets);
     });
   }
 
