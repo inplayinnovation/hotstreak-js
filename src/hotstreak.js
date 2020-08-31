@@ -1,16 +1,12 @@
 import API from './graphql/api';
-import { parsePrediction } from './helpers';
+import JWT from './jwt';
+import { parseMarket } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
   constructor(options) {
     const { baseUrl, key, secret, subject } = options;
-
-    let token = options.token;
-    if (!token) {
-      const jwt = require('jsonwebtoken');
-      token = jwt.sign({ iss: key, subject }, secret);
-    }
+    const token = options.token || JWT.sign(key, subject, secret);
 
     this._baseUrl = baseUrl;
     this._headers = {
@@ -78,7 +74,7 @@ class HotStreak {
         }))
       };
 
-      callback(game, predictions.map(parsePrediction));
+      callback(game, predictions.map(parseMarket));
     });
   }
 
