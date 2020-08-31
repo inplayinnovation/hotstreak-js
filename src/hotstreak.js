@@ -35,7 +35,7 @@ class HotStreak {
     });
   }
 
-  async fetchGames() {
+  fetchGames() {
     return this._api.gamesQuery();
   }
 
