@@ -22,13 +22,27 @@ import HotStreak from 'hotstreak';
 const HotStreak = require('hotstreak');
 ```
 
-HotStreak needs to be configured with your account's public/private keys, and the URL of the environment you want to point to. Contact HotStreak support to get started.
+HotStreak needs to be initialized with:
+  1) The URL of the environment you want to point to as `baseUrl`
+  2) Credentials
+      * Server (i.e. node) - pass `key` and `secret` directly
+      * Client (i.e. browser, mobile device, etc.) - generate a JWT signed with `secret` on server. Then pass the JWT to your client. The JWT payload should contain your API key `{ iss: key, subject: 'optional_client_id' }`
+
+🚨🚨🚨 You should NOT deploy your API `secret` to the client directly!
 
 ```javascript
+// server initialization
 const hotstreak = new HotStreak({
   baseUrl: 'BASE_URL',
   key: 'YOUR_KEY',
   secret: 'YOUR_SECRET'
+});
+
+// client initialization
+const jwt = await getJwtFromYourServer();
+const hotstreak = new HotStreak({
+  baseUrl: 'BASE_URL',
+  token: jwt
 });
 ```
 
