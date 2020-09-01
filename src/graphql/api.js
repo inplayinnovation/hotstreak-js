@@ -19,7 +19,10 @@ class API {
   }
 
   async predictMutation(variables) {
-    const { prediction } = await this._graphQLClient.request(PREDICT_MUTATION, variables);
+    const { predict: prediction } = await this._graphQLClient.request(
+      PREDICT_MUTATION,
+      variables
+    );
     return prediction;
   }
 }

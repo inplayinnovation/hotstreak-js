@@ -34,7 +34,7 @@ class HotStreak {
     });
   }
 
-  predict(game, market, predictedOutcome, checkExpectations = true) {
+  predict(game, market, predictedOutcome, subMarketIndex = 0, checkExpectations = false) {
     const predictPayload = {
       gameId: game.id,
       marketId: market.id,
@@ -42,9 +42,9 @@ class HotStreak {
     };
 
     if (checkExpectations) {
-      predictPayload['expectedLine'] = market.line;
-      predictPayload['expectedProbability'] = market.probability;
-      predictPayload['expectedDuration'] = market.duration;
+      predictPayload.expectedLine = market.lines[subMarketIndex];
+      predictPayload.expectedProbability = market.probabilities[subMarketIndex];
+      predictPayload.expectedDuration = market.durations[subMarketIndex];
     }
 
     return this._api.predictMutation(predictPayload);
