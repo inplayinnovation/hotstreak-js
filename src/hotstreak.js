@@ -68,10 +68,14 @@ class HotStreak {
 
       const parsedMarkets = Object.keys(markets).map(id => {
         const [probability, line, duration] = markets[id].split(',');
-        const [target, category, position = null] = id.split(',');
+        const [targetId, category, position = null] = id.split(',');
         return {
+          __typename: 'Market',
           id,
-          target,
+          target: {
+            __typename: targetId.split(':')[0],
+            id: targetId
+          },
           lines: [parseFloat(line)],
           probabilities: [parseFloat(probability)],
           durations: [parseFloat(duration)],
