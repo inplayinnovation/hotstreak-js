@@ -34,6 +34,22 @@ class HotStreak {
     });
   }
 
+  predict(game, market, predictedOutcome, checkExpectations = true) {
+    const predictPayload = {
+      gameId: game.id,
+      marketId: market.id,
+      predictedOutcome
+    };
+
+    if (checkExpectations) {
+      predictPayload['expectedLine'] = market.line;
+      predictPayload['expectedProbability'] = market.probability;
+      predictPayload['expectedDuration'] = market.duration;
+    }
+
+    return this._api.predictMutation(predictPayload);
+  }
+
   fetchGames() {
     return this._api.gamesQuery();
   }
