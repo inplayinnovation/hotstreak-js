@@ -28,7 +28,7 @@ HotStreak needs to be initialized with:
       * Server (i.e. node) - pass `key` and `secret` directly
       * Client (i.e. browser, mobile device, etc.) - generate a JWT signed with `secret` on server. Then pass the JWT to your client. The JWT payload should contain your API key `{ iss: key, subject: 'optional_client_id', exp: TIMESTAMP_IN_FUTURE }`
 
-🚨🚨🚨 You should NOT deploy your API `secret` to the client directly!
+🚨 You should NOT deploy your API `secret` to the client directly!
 
 ```javascript
 // server initialization
@@ -46,12 +46,41 @@ const hotstreak = new HotStreak({
 });
 ```
 
-Subscribing to one game:
+## Subscribing to a game:
 
 ```javascript
 const games = await hotstreak.fetchGames();
+// TODO: push games to your store
+
 hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, markets) => {
+  // TODO: push game & markets to your store
   console.log(game);
   console.log(markets);
 });
+```
+
+## Making a Prediction:
+
+```javascript
+const prediction = hotstreak.predict(game, market, "over");
+```
+
+## Prediction Web Hook:
+
+Results are communicated via a POST web hook registered with your API KEY. Example web hook payload
+
+```json
+{
+  "prediction_id": "Prediction:P87Fbd",
+  "sequence": 4,
+  "timestamp": 1598983584.4778883,
+  "state": "finalized",
+  "actual_outcome": "over",
+  "predicted_outcome": "over",
+  "category": "rebounds",
+  "current": 1.0,
+  "subject": null,
+  "meta": null,
+  "id": "0c9a89371d6f96bd2c674b1bd58c58e311526a3f"
+}
 ```

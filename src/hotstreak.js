@@ -1,6 +1,5 @@
 import API from './graphql/api';
 import JWT from './jwt';
-import { parseMarket } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
@@ -35,6 +34,22 @@ class HotStreak {
     });
   }
 
+  predict(game, market, predictedOutcome, subMarketIndex = 0, checkExpectations = false) {
+    const predictPayload = {
+      gameId: game.id,
+      marketId: market.id,
+      predictedOutcome
+    };
+
+    if (checkExpectations) {
+      predictPayload.expectedLine = market.lines[subMarketIndex];
+      predictPayload.expectedProbability = market.probabilities[subMarketIndex];
+      predictPayload.expectedDuration = market.durations[subMarketIndex];
+    }
+
+    return this._api.predictMutation(predictPayload);
+  }
+
   fetchGames() {
     return this._api.gamesQuery();
   }
@@ -43,16 +58,7 @@ class HotStreak {
     await this._initializePusherClient();
     const channel = this._pusher.subscribe(channelName);
     channel.bind('update', data => {
-      const {
-        clocks,
-        id,
-        event,
-        predictions,
-        scores,
-        status,
-        timestamp
-      } = data;
-
+      const { clocks, id, event, markets, scores, status, timestamp } = data;
       const { clock, elapsed, period } = clocks.game;
 
       if (this._lastTimestamp && timestamp < this._lastTimestamp) {
@@ -62,6 +68,7 @@ class HotStreak {
       this._lastTimestamp = timestamp;
 
       const game = {
+        __typename: 'Game',
         id: `Game:${id}`,
         clock,
         elapsed,
@@ -69,12 +76,31 @@ class HotStreak {
         period,
         status,
         opponents: Object.keys(scores).map(id => ({
+          __typename: 'Opponent',
           id: `Opponent:${id}`,
           score: scores[id]
         }))
       };
 
-      callback(game, predictions.map(parseMarket));
+      const parsedMarkets = Object.keys(markets).map(id => {
+        const [probability, line, duration] = markets[id].split(',');
+        const [targetId, category, position = null] = id.split(',');
+        return {
+          __typename: 'Market',
+          id,
+          target: {
+            __typename: targetId.split(':')[0],
+            id: targetId
+          },
+          lines: [parseFloat(line)],
+          probabilities: [parseFloat(probability)],
+          durations: [parseFloat(duration)],
+          category,
+          position
+        };
+      });
+
+      callback(game, parsedMarkets);
     });
   }
 
