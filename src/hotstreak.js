@@ -52,6 +52,7 @@ class HotStreak {
       this._lastTimestamp = timestamp;
 
       const game = {
+        __typename: 'Game',
         id: `Game:${id}`,
         clock,
         elapsed,
@@ -59,6 +60,7 @@ class HotStreak {
         period,
         status,
         opponents: Object.keys(scores).map(id => ({
+          __typename: 'Opponent',
           id: `Opponent:${id}`,
           score: scores[id]
         }))
