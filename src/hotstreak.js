@@ -68,6 +68,7 @@ class HotStreak {
       this._lastTimestamp = timestamp;
 
       const game = {
+        __typename: 'Game',
         id: `Game:${id}`,
         clock,
         elapsed,
@@ -75,6 +76,7 @@ class HotStreak {
         period,
         status,
         opponents: Object.keys(scores).map(id => ({
+          __typename: 'Opponent',
           id: `Opponent:${id}`,
           score: scores[id]
         }))
@@ -82,10 +84,14 @@ class HotStreak {
 
       const parsedMarkets = Object.keys(markets).map(id => {
         const [probability, line, duration] = markets[id].split(',');
-        const [target, category, position = null] = id.split(',');
+        const [targetId, category, position = null] = id.split(',');
         return {
+          __typename: 'Market',
           id,
-          target,
+          target: {
+            __typename: targetId.split(':')[0],
+            id: targetId
+          },
           lines: [parseFloat(line)],
           probabilities: [parseFloat(probability)],
           durations: [parseFloat(duration)],
