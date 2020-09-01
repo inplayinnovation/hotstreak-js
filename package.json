@@ -16,6 +16,6 @@
     "graphql": "^15.3.0",
     "graphql-request": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "pusher-js": "^7.0.0"
+    "pusher-js": "https://github.com/giaset/pusher-js"
   }
 }
