@@ -46,12 +46,14 @@ const hotstreak = new HotStreak({
 });
 ```
 
-## Subscribing to one game:
+## Subscribing to a game:
 
 ```javascript
 const games = await hotstreak.fetchGames();
+// TODO: push games to your store
+
 hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, markets) => {
-  // this is a good place to push to your store
+  // TODO: push game & markets to your store
   console.log(game);
   console.log(markets);
 });
