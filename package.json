@@ -11,11 +11,18 @@
     "type": "git",
     "url": "https://github.com/unblockable/hotstreak-js.git"
   },
+  "scripts": {
+    "build-web": "./node_modules/browserify/bin/cmd.js src/hotstreak.js -p esmify --standalone HotStreak  > dist/web.js"
+  },
   "dependencies": {
     "esm": "^3.2.25",
     "graphql": "^15.3.0",
     "graphql-request": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "pusher-js": "https://github.com/giaset/pusher-js"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.2",
+    "esmify": "^2.1.1"
   }
 }
