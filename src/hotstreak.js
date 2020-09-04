@@ -105,7 +105,7 @@ class HotStreak {
           id,
           affinity: parseFloat(affinity),
           category,
-          durations: durations.split(',').map(parseFloat),
+          durations: durations ? durations.split(',').map(parseFloat) : null,
           game: {
             __typename: 'Game',
             id: gameId
