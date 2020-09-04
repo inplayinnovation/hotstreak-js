@@ -39,11 +39,13 @@ class HotStreak {
     market,
     predictedOutcome,
     subMarketIndex = 0,
-    checkExpectations = false
+    checkExpectations = false,
+    meta
   ) {
     const predictPayload = {
       gameId: game.id,
       marketId: market.id,
+      meta: JSON.stringify(meta),
       predictedOutcome
     };
 
@@ -77,9 +79,10 @@ class HotStreak {
 
       this._lastTimestamp = timestamp;
 
+      const gameId = `Game:${id}`;
       const game = {
         __typename: 'Game',
-        id: `Game:${id}`,
+        id: gameId,
         clock,
         elapsed,
         event,
@@ -93,20 +96,27 @@ class HotStreak {
       };
 
       const parsedMarkets = Object.keys(markets).map(id => {
-        const [probability, line, duration] = markets[id].split(',');
+        const [probabilities, lines, durations, affinity] = markets[id].split(
+          '|'
+        );
         const [targetId, category, position = null] = id.split(',');
         return {
           __typename: 'Market',
           id,
+          affinity: parseFloat(affinity),
+          category,
+          durations: durations.split(',').map(parseFloat),
+          game: {
+            __typename: 'Game',
+            id: gameId
+          },
+          lines: lines.split(',').map(parseFloat),
+          position,
+          probabilities: probabilities.split(',').map(parseFloat),
           target: {
             __typename: targetId.split(':')[0],
             id: targetId
-          },
-          lines: [parseFloat(line)],
-          probabilities: [parseFloat(probability)],
-          durations: [parseFloat(duration)],
-          category,
-          position
+          }
         };
       });
 

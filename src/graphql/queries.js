@@ -48,9 +48,27 @@ const PREDICTIONS_QUERY = gql`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
       ...PredictionFragment
+      target {
+        ... on Participant {
+          ...ParticipantFragment
+          opponent {
+            ...OpponentFragment
+            team {
+              ...TeamFragment
+            }
+          }
+          player {
+            ...PlayerFragment
+          }
+        }
+      }
     }
   }
   ${PREDICTION_FRAGMENT}
+  ${PARTICIPANT_FRAGMENT}
+  ${OPPONENT_FRAGMENT}
+  ${TEAM_FRAGMENT}
+  ${PLAYER_FRAGMENT}
 `;
 
 const SYSTEM_QUERY = gql`

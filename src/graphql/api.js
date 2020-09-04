@@ -10,12 +10,30 @@ class API {
 
   async gamesQuery() {
     const { games } = await this._graphQLClient.request(GAMES_QUERY);
+    games.forEach(game => {
+      game.markets.forEach(market => {
+        const [targetId, category, position = null] = market.id.split(',');
+        market.category = category;
+        market.game = {
+          __typename: 'Game',
+          id: game.id
+        };
+        market.position = position;
+        market.target = {
+          __typename: targetId.split(':')[0],
+          id: targetId
+        };
+      });
+    });
     return games;
   }
 
   async predictionsQuery(page, meta) {
     const variables = { meta, page };
-    const { predictions } = await this._graphQLClient.request(PREDICTIONS_QUERY, variables);
+    const { predictions } = await this._graphQLClient.request(
+      PREDICTIONS_QUERY,
+      variables
+    );
     return predictions;
   }
 

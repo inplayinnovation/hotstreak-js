@@ -42,6 +42,7 @@ const LEAGUE_FRAGMENT = gql`
 const MARKET_FRAGMENT = gql`
   fragment MarketFragment on Market {
     __typename
+    affinity
     durations
     id
     lines
@@ -74,7 +75,6 @@ const PARTICIPANT_FRAGMENT = gql`
   fragment ParticipantFragment on Participant {
     __typename
     id
-    affinities
     opponent {
       __typename
       id

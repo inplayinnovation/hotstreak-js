@@ -10,6 +10,7 @@ const PREDICT_MUTATION = gql`
     $expectedLine: Float
     $expectedProbability: Float
     $expectedDuration: Float
+    $meta: Json
   ) {
     predict(
       gameId: $gameId
@@ -18,6 +19,7 @@ const PREDICT_MUTATION = gql`
       expectedLine: $expectedLine
       expectedProbability: $expectedProbability
       expectedDuration: $expectedDuration
+      meta: $meta
     ) {
       prediction {
         ...PredictionFragment
