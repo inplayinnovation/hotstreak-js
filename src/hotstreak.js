@@ -34,7 +34,13 @@ class HotStreak {
     });
   }
 
-  predict(game, market, predictedOutcome, subMarketIndex = 0, checkExpectations = false) {
+  predict(
+    game,
+    market,
+    predictedOutcome,
+    subMarketIndex = 0,
+    checkExpectations = false
+  ) {
     const predictPayload = {
       gameId: game.id,
       marketId: market.id,
@@ -52,6 +58,10 @@ class HotStreak {
 
   fetchGames() {
     return this._api.gamesQuery();
+  }
+
+  fetchPredictions(page = 1, meta) {
+    return this._api.predictionsQuery(page, JSON.stringify(meta));
   }
 
   async subscribeToChannel(channelName, callback) {

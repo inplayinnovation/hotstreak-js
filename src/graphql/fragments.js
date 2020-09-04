@@ -12,6 +12,10 @@ const GAME_FRAGMENT = gql`
       __typename
       id
     }
+    markets {
+      __typename
+      id
+    }
     opponents {
       __typename
       id
@@ -32,6 +36,16 @@ const LEAGUE_FRAGMENT = gql`
     name
     regulationClock
     regulationPeriods
+  }
+`;
+
+const MARKET_FRAGMENT = gql`
+  fragment MarketFragment on Market {
+    __typename
+    durations
+    id
+    lines
+    probabilities
   }
 `;
 
@@ -84,6 +98,31 @@ const PLAYER_FRAGMENT = gql`
   }
 `;
 
+const PREDICTION_FRAGMENT = gql`
+  fragment PredictionFragment on Prediction {
+    __typename
+    actualOutcome
+    beginGameClock
+    category
+    createdAt
+    current
+    endGameClock
+    id
+    line
+    meta
+    position
+    predictedOutcome
+    probability
+    sequence
+    state
+    subject
+    target {
+      id
+    }
+    updatedAt
+  }
+`;
+
 const TEAM_FRAGMENT = gql`
   fragment TeamFragment on Team {
     __typename
@@ -97,8 +136,10 @@ const TEAM_FRAGMENT = gql`
 export {
   GAME_FRAGMENT,
   LEAGUE_FRAGMENT,
+  MARKET_FRAGMENT,
   OPPONENT_FRAGMENT,
   PARTICIPANT_FRAGMENT,
+  PREDICTION_FRAGMENT,
   PLAYER_FRAGMENT,
   TEAM_FRAGMENT
 };

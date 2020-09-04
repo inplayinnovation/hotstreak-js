@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { GAMES_QUERY, SYSTEM_QUERY } from './queries';
+import { GAMES_QUERY, PREDICTIONS_QUERY, SYSTEM_QUERY } from './queries';
 import { PREDICT_MUTATION } from './mutations';
 
 class API {
@@ -11,6 +11,12 @@ class API {
   async gamesQuery() {
     const { games } = await this._graphQLClient.request(GAMES_QUERY);
     return games;
+  }
+
+  async predictionsQuery(page, meta) {
+    const variables = { meta, page };
+    const { predictions } = await this._graphQLClient.request(PREDICTIONS_QUERY, variables);
+    return predictions;
   }
 
   async systemQuery() {
