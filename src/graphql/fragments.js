@@ -117,6 +117,7 @@ const PREDICTION_FRAGMENT = gql`
     state
     subject
     target {
+      __typename
       id
     }
     updatedAt
