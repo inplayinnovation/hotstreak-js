@@ -12,7 +12,7 @@
     "url": "https://github.com/unblockable/hotstreak-js.git"
   },
   "scripts": {
-    "build-web": "./node_modules/browserify/bin/cmd.js src/hotstreak.js -p esmify --standalone HotStreak  > dist/web.js"
+    "build": "node build.js"
   },
   "dependencies": {
     "esm": "^3.2.25",
