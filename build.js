@@ -5,3 +5,4 @@ shell.exec(
 );
 shell.exec('git add .');
 shell.exec('git commit -m "Made build"');
+shell.exec('npm publish');
