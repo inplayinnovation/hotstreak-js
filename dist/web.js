@@ -42305,7 +42305,33 @@ class API {
     const {
       games
     } = await this._graphQLClient.request(_queries.GAMES_QUERY);
+    games.forEach(game => {
+      game.markets.forEach(market => {
+        const [targetId, category, position = null] = market.id.split(',');
+        market.category = category;
+        market.game = {
+          __typename: 'Game',
+          id: game.id
+        };
+        market.position = position;
+        market.target = {
+          __typename: targetId.split(':')[0],
+          id: targetId
+        };
+      });
+    });
     return games;
+  }
+
+  async predictionsQuery(page, meta) {
+    const variables = {
+      meta,
+      page
+    };
+    const {
+      predictions
+    } = await this._graphQLClient.request(_queries.PREDICTIONS_QUERY, variables);
+    return predictions;
   }
 
   async systemQuery() {
@@ -42333,7 +42359,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TEAM_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
+exports.TEAM_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42346,6 +42372,10 @@ const GAME_FRAGMENT = (0, _graphqlRequest.gql)`
     event
     id
     league {
+      __typename
+      id
+    }
+    markets {
       __typename
       id
     }
@@ -42372,6 +42402,17 @@ const LEAGUE_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.LEAGUE_FRAGMENT = LEAGUE_FRAGMENT;
+const MARKET_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment MarketFragment on Market {
+    __typename
+    affinity
+    durations
+    id
+    lines
+    probabilities
+  }
+`;
+exports.MARKET_FRAGMENT = MARKET_FRAGMENT;
 const OPPONENT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment OpponentFragment on Opponent {
     __typename
@@ -42397,7 +42438,6 @@ const PARTICIPANT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment ParticipantFragment on Participant {
     __typename
     id
-    affinities
     opponent {
       __typename
       id
@@ -42421,6 +42461,32 @@ const PLAYER_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.PLAYER_FRAGMENT = PLAYER_FRAGMENT;
+const PREDICTION_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment PredictionFragment on Prediction {
+    __typename
+    actualOutcome
+    beginGameClock
+    category
+    createdAt
+    current
+    endGameClock
+    id
+    line
+    meta
+    position
+    predictedOutcome
+    probability
+    sequence
+    state
+    subject
+    target {
+      __typename
+      id
+    }
+    updatedAt
+  }
+`;
+exports.PREDICTION_FRAGMENT = PREDICTION_FRAGMENT;
 const TEAM_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment TeamFragment on Team {
     __typename
@@ -42442,37 +42508,43 @@ exports.PREDICT_MUTATION = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
+var _fragments = require("./fragments");
+
 const PREDICT_MUTATION = (0, _graphqlRequest.gql)`
-  mutation Predict($gameId: ID!, $marketId: String!, $predictedOutcome: String!, $expectedLine: Float, $expectedProbability: Float, $expectedDuration: Float) {
-    predict(gameId: $gameId, marketId: $marketId, predictedOutcome: $predictedOutcome, expectedLine: $expectedLine, expectedProbability: $expectedProbability, expectedDuration: $expectedDuration) {
+  mutation Predict(
+    $gameId: ID!
+    $marketId: String!
+    $predictedOutcome: String!
+    $expectedLine: Float
+    $expectedProbability: Float
+    $expectedDuration: Float
+    $meta: Json
+  ) {
+    predict(
+      gameId: $gameId
+      marketId: $marketId
+      predictedOutcome: $predictedOutcome
+      expectedLine: $expectedLine
+      expectedProbability: $expectedProbability
+      expectedDuration: $expectedDuration
+      meta: $meta
+    ) {
       prediction {
-        actualOutcome
-        beginGameClock
-        category
-        createdAt
-        current
-        endGameClock
-        id
-        line
-        position
-        predictedOutcome
-        probability
-        sequence
-        state
-        updatedAt
+        ...PredictionFragment
       }
     }
   }
+  ${_fragments.PREDICTION_FRAGMENT}
 `;
 exports.PREDICT_MUTATION = PREDICT_MUTATION;
 
-},{"graphql-request":104}],233:[function(require,module,exports){
+},{"./fragments":231,"graphql-request":104}],233:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SYSTEM_QUERY = exports.GAMES_QUERY = void 0;
+exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.GAMES_QUERY = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42484,6 +42556,9 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
       ...GameFragment
       league {
         ...LeagueFragment
+      }
+      markets {
+        ...MarketFragment
       }
       opponents {
         ...OpponentFragment
@@ -42501,12 +42576,40 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
   }
   ${_fragments.GAME_FRAGMENT}
   ${_fragments.LEAGUE_FRAGMENT}
+  ${_fragments.MARKET_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
   ${_fragments.TEAM_FRAGMENT}
 `;
 exports.GAMES_QUERY = GAMES_QUERY;
+const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
+  query PredictionsQuery($page: Int, $meta: Json) {
+    predictions(page: $page, meta: $meta) {
+      ...PredictionFragment
+      target {
+        ... on Participant {
+          ...ParticipantFragment
+          opponent {
+            ...OpponentFragment
+            team {
+              ...TeamFragment
+            }
+          }
+          player {
+            ...PlayerFragment
+          }
+        }
+      }
+    }
+  }
+  ${_fragments.PREDICTION_FRAGMENT}
+  ${_fragments.PARTICIPANT_FRAGMENT}
+  ${_fragments.OPPONENT_FRAGMENT}
+  ${_fragments.TEAM_FRAGMENT}
+  ${_fragments.PLAYER_FRAGMENT}
+`;
+exports.PREDICTIONS_QUERY = PREDICTIONS_QUERY;
 const SYSTEM_QUERY = (0, _graphqlRequest.gql)`
   {
     system {
@@ -42572,10 +42675,11 @@ class HotStreak {
     });
   }
 
-  predict(game, market, predictedOutcome, subMarketIndex = 0, checkExpectations = false) {
+  predict(game, market, predictedOutcome, subMarketIndex = 0, checkExpectations = false, meta) {
     const predictPayload = {
       gameId: game.id,
       marketId: market.id,
+      meta: JSON.stringify(meta),
       predictedOutcome
     };
 
@@ -42590,6 +42694,10 @@ class HotStreak {
 
   fetchGames() {
     return this._api.gamesQuery();
+  }
+
+  fetchPredictions(page = 1, meta) {
+    return this._api.predictionsQuery(page, JSON.stringify(meta));
   }
 
   async subscribeToChannel(channelName, callback) {
@@ -42618,9 +42726,10 @@ class HotStreak {
       }
 
       this._lastTimestamp = timestamp;
+      const gameId = `Game:${id}`;
       const game = {
         __typename: 'Game',
-        id: `Game:${id}`,
+        id: gameId,
         clock,
         elapsed,
         event,
@@ -42633,20 +42742,25 @@ class HotStreak {
         }))
       };
       const parsedMarkets = Object.keys(markets).map(id => {
-        const [probability, line, duration] = markets[id].split(',');
+        const [probabilities, lines, durations, affinity] = markets[id].split('|');
         const [targetId, category, position = null] = id.split(',');
         return {
           __typename: 'Market',
           id,
+          affinity: parseFloat(affinity),
+          category,
+          durations: durations ? durations.split(',').map(parseFloat) : null,
+          game: {
+            __typename: 'Game',
+            id: gameId
+          },
+          lines: lines.split(',').map(parseFloat),
+          position,
+          probabilities: probabilities.split(',').map(parseFloat),
           target: {
             __typename: targetId.split(':')[0],
             id: targetId
-          },
-          lines: [parseFloat(line)],
-          probabilities: [parseFloat(probability)],
-          durations: [parseFloat(duration)],
-          category,
-          position
+          }
         };
       });
       callback(game, parsedMarkets);
