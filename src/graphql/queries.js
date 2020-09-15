@@ -8,11 +8,12 @@ import {
   PARTICIPANT_FRAGMENT,
   PLAYER_FRAGMENT,
   PREDICTION_FRAGMENT,
+  SITUATION_FRAGMENT,
   TEAM_FRAGMENT
 } from './fragments';
 
 const GAMES_QUERY = gql`
-  {
+  query GamesQuery {
     games {
       ...GameFragment
       league {
@@ -33,6 +34,11 @@ const GAMES_QUERY = gql`
           ...TeamFragment
         }
       }
+      ... on FootballGame {
+        situation {
+          ...SituationFragment
+        }
+      }
     }
   }
   ${GAME_FRAGMENT}
@@ -42,6 +48,7 @@ const GAMES_QUERY = gql`
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
   ${TEAM_FRAGMENT}
+  ${SITUATION_FRAGMENT}
 `;
 
 const PREDICTIONS_QUERY = gql`
@@ -72,7 +79,7 @@ const PREDICTIONS_QUERY = gql`
 `;
 
 const SYSTEM_QUERY = gql`
-  {
+  query SystemQuery {
     system {
       gamesChannel
       pusherAppKey

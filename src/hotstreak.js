@@ -86,14 +86,41 @@ class HotStreak {
         clock,
         elapsed,
         event,
-        period,
-        status,
         opponents: Object.keys(scores).map(id => ({
           __typename: 'Opponent',
           id: `Opponent:${id}`,
           score: scores[id]
-        }))
+        })),
+        period,
+        status
       };
+
+      if (data.situation) {
+        const {
+          down,
+          distance,
+          id,
+          location_id,
+          possession_id,
+          yardline
+        } = data.situation;
+        const situation = {
+          __typename: 'Situation',
+          id,
+          down,
+          distance,
+          location: {
+            __typename: 'Opponent',
+            id: location_id
+          },
+          possession: {
+            __typename: 'Opponent',
+            id: possession_id
+          },
+          yardline
+        };
+        game.situation = situation;
+      }
 
       const parsedMarkets = Object.keys(markets).map(id => {
         const [probabilities, lines, durations, affinity] = markets[id].split(

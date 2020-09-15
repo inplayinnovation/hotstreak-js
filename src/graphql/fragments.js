@@ -124,6 +124,24 @@ const PREDICTION_FRAGMENT = gql`
   }
 `;
 
+const SITUATION_FRAGMENT = gql`
+  fragment SituationFragment on Situation {
+    __typename
+    distance
+    down
+    id
+    location {
+      __typename
+      id
+    }
+    possession {
+      __typename
+      id
+    }
+    yardline
+  }
+`;
+
 const TEAM_FRAGMENT = gql`
   fragment TeamFragment on Team {
     __typename
@@ -142,5 +160,6 @@ export {
   PARTICIPANT_FRAGMENT,
   PREDICTION_FRAGMENT,
   PLAYER_FRAGMENT,
+  SITUATION_FRAGMENT,
   TEAM_FRAGMENT
 };
