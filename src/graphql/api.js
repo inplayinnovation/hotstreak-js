@@ -34,6 +34,17 @@ class API {
       PREDICTIONS_QUERY,
       variables
     );
+
+    predictions.forEach(prediction => {
+      if (prediction.opponent) {
+        prediction.target = prediction.opponent;
+      } else if (prediction.participant) {
+        prediction.target = prediction.participant;
+      }
+      delete prediction.opponent;
+      delete prediction.participant;
+    });
+
     return predictions;
   }
 

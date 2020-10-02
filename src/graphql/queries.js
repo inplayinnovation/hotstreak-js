@@ -8,8 +8,7 @@ import {
   PARTICIPANT_FRAGMENT,
   PLAYER_FRAGMENT,
   PREDICTION_FRAGMENT,
-  SITUATION_FRAGMENT,
-  TEAM_FRAGMENT
+  SITUATION_FRAGMENT
 } from './fragments';
 
 const GAMES_QUERY = gql`
@@ -30,9 +29,6 @@ const GAMES_QUERY = gql`
             ...PlayerFragment
           }
         }
-        team {
-          ...TeamFragment
-        }
       }
       ... on FootballGame {
         situation {
@@ -47,7 +43,6 @@ const GAMES_QUERY = gql`
   ${OPPONENT_FRAGMENT}
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
-  ${TEAM_FRAGMENT}
   ${SITUATION_FRAGMENT}
 `;
 
@@ -55,26 +50,29 @@ const PREDICTIONS_QUERY = gql`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
       ...PredictionFragment
-      target {
-        ... on Participant {
+      opponent {
+        ...OpponentFragment
+        participants {
           ...ParticipantFragment
-          opponent {
-            ...OpponentFragment
-            team {
-              ...TeamFragment
-            }
-          }
           player {
             ...PlayerFragment
           }
         }
       }
+      participant {
+        ...ParticipantFragment
+        opponent {
+          ...OpponentFragment
+        }
+        player {
+          ...PlayerFragment
+        }
+      }
     }
   }
   ${PREDICTION_FRAGMENT}
-  ${PARTICIPANT_FRAGMENT}
   ${OPPONENT_FRAGMENT}
-  ${TEAM_FRAGMENT}
+  ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
 `;
 

@@ -50,6 +50,16 @@ const MARKET_FRAGMENT = gql`
   }
 `;
 
+const TEAM_FRAGMENT = gql`
+  fragment TeamFragment on Team {
+    __typename
+    id
+    market
+    name
+    shortName
+  }
+`;
+
 const OPPONENT_FRAGMENT = gql`
   fragment OpponentFragment on Opponent {
     __typename
@@ -59,16 +69,12 @@ const OPPONENT_FRAGMENT = gql`
       id
     }
     id
-    participants {
-      __typename
-      id
-    }
     score
     team {
-      __typename
-      id
+      ...TeamFragment
     }
   }
+  ${TEAM_FRAGMENT}
 `;
 
 const PARTICIPANT_FRAGMENT = gql`
@@ -139,16 +145,6 @@ const SITUATION_FRAGMENT = gql`
       id
     }
     yardline
-  }
-`;
-
-const TEAM_FRAGMENT = gql`
-  fragment TeamFragment on Team {
-    __typename
-    id
-    market
-    name
-    shortName
   }
 `;
 
