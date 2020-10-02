@@ -42331,6 +42331,16 @@ class API {
     const {
       predictions
     } = await this._graphQLClient.request(_queries.PREDICTIONS_QUERY, variables);
+    predictions.forEach(prediction => {
+      if (prediction.opponent) {
+        prediction.target = prediction.opponent;
+      } else if (prediction.participant) {
+        prediction.target = prediction.participant;
+      }
+
+      delete prediction.opponent;
+      delete prediction.participant;
+    });
     return predictions;
   }
 
@@ -42413,6 +42423,16 @@ const MARKET_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.MARKET_FRAGMENT = MARKET_FRAGMENT;
+const TEAM_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment TeamFragment on Team {
+    __typename
+    id
+    market
+    name
+    shortName
+  }
+`;
+exports.TEAM_FRAGMENT = TEAM_FRAGMENT;
 const OPPONENT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment OpponentFragment on Opponent {
     __typename
@@ -42422,16 +42442,12 @@ const OPPONENT_FRAGMENT = (0, _graphqlRequest.gql)`
       id
     }
     id
-    participants {
-      __typename
-      id
-    }
     score
     team {
-      __typename
-      id
+      ...TeamFragment
     }
   }
+  ${TEAM_FRAGMENT}
 `;
 exports.OPPONENT_FRAGMENT = OPPONENT_FRAGMENT;
 const PARTICIPANT_FRAGMENT = (0, _graphqlRequest.gql)`
@@ -42505,16 +42521,6 @@ const SITUATION_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.SITUATION_FRAGMENT = SITUATION_FRAGMENT;
-const TEAM_FRAGMENT = (0, _graphqlRequest.gql)`
-  fragment TeamFragment on Team {
-    __typename
-    id
-    market
-    name
-    shortName
-  }
-`;
-exports.TEAM_FRAGMENT = TEAM_FRAGMENT;
 
 },{"graphql-request":104}],232:[function(require,module,exports){
 "use strict";
@@ -42586,9 +42592,6 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
             ...PlayerFragment
           }
         }
-        team {
-          ...TeamFragment
-        }
       }
       ... on FootballGame {
         situation {
@@ -42603,7 +42606,6 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
-  ${_fragments.TEAM_FRAGMENT}
   ${_fragments.SITUATION_FRAGMENT}
 `;
 exports.GAMES_QUERY = GAMES_QUERY;
@@ -42611,26 +42613,29 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
       ...PredictionFragment
-      target {
-        ... on Participant {
+      opponent {
+        ...OpponentFragment
+        participants {
           ...ParticipantFragment
-          opponent {
-            ...OpponentFragment
-            team {
-              ...TeamFragment
-            }
-          }
           player {
             ...PlayerFragment
           }
         }
       }
+      participant {
+        ...ParticipantFragment
+        opponent {
+          ...OpponentFragment
+        }
+        player {
+          ...PlayerFragment
+        }
+      }
     }
   }
   ${_fragments.PREDICTION_FRAGMENT}
-  ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
-  ${_fragments.TEAM_FRAGMENT}
+  ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
 `;
 exports.PREDICTIONS_QUERY = PREDICTIONS_QUERY;
