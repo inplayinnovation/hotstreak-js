@@ -23,14 +23,16 @@ const HotStreak = require('hotstreak');
 ```
 
 HotStreak needs to be initialized with:
-  1) The URL of the environment you want to point to as `baseUrl`
-  2) Credentials
-      * Server (i.e. node) - pass `key` and `secret` directly
-      * Client (i.e. browser, mobile device, etc.) - generate a JWT signed with `secret` on server. Then pass the JWT to your client. The JWT payload must contain your API key, and may contain a subject identifiying your client
 
-      ```javascript
-      { iss: key, subject: 'optional_client_id', exp: TIMESTAMP_IN_FUTURE }
-      ````
+1. The URL of the environment you want to point to as `baseUrl`
+2. Credentials
+
+   - Server (i.e. node) - pass `key` and `secret` directly
+   - Client (i.e. browser, mobile device, etc.) - generate a JWT signed with `secret` on server. Then pass the JWT to your client. The JWT payload must contain your API key, and may contain a subject identifiying your client
+
+   ```javascript
+   { iss: key, subject: 'optional_client_id', exp: TIMESTAMP_IN_FUTURE }
+   ```
 
 🚨 You should NOT deploy your API `secret` to the client directly!
 
@@ -63,10 +65,16 @@ hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, markets) => {
 });
 ```
 
+## Unsubscribing from a game:
+
+```javascript
+hotstreak.unsubscribeFromChannel(game.broadcastChannel);
+```
+
 ## Making a Prediction:
 
 ```javascript
-const prediction = hotstreak.predict(game, market, "over");
+const prediction = hotstreak.predict(game, market, 'over');
 ```
 
 ## Prediction Web Hook:
