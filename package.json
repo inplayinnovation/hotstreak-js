@@ -12,7 +12,7 @@
     "url": "https://github.com/unblockable/hotstreak-js.git"
   },
   "scripts": {
-    "publish": "npm version patch && npm publish",
+    "deploy": "npm version patch && npm publish",
     "version": "./node_modules/browserify/bin/cmd.js src/hotstreak.js -p esmify --standalone HotStreak  > dist/web.js && git add .",
     "postversion": "git push && git push --tags"
   },
