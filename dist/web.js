@@ -42832,6 +42832,10 @@ class HotStreak {
     return this.subscribeToChannel(this._gamesChannel, callback);
   }
 
+  unsubscribeFromChannel(channelName) {
+    this._pusher.unsubscribe(channelName);
+  }
+
 }
 
 var _default = HotStreak;
