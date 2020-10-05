@@ -12,7 +12,9 @@
     "url": "https://github.com/unblockable/hotstreak-js.git"
   },
   "scripts": {
-    "build": "node build.js"
+    "publish": "npm version patch && npm publish",
+    "version": "./node_modules/browserify/bin/cmd.js src/hotstreak.js -p esmify --standalone HotStreak  > dist/web.js && git add .",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "esm": "^3.2.25",
@@ -23,7 +25,6 @@
   },
   "devDependencies": {
     "browserify": "^16.5.2",
-    "esmify": "^2.1.1",
-    "shelljs": "^0.8.4"
+    "esmify": "^2.1.1"
   }
 }
