@@ -42704,18 +42704,19 @@ class HotStreak {
     });
   }
 
-  predict(game, market, predictedOutcome, subMarketIndex = 0, checkExpectations = false, meta) {
+  predict(game, market, predictedOutcome, submarketIndex = 0, checkExpectations = false, meta) {
     const predictPayload = {
       gameId: game.id,
       marketId: market.id,
       meta: JSON.stringify(meta),
-      predictedOutcome
+      predictedOutcome,
+      submarketIndex
     };
 
     if (checkExpectations) {
-      predictPayload.expectedLine = market.lines[subMarketIndex];
-      predictPayload.expectedProbability = market.probabilities[subMarketIndex];
-      predictPayload.expectedDuration = market.durations[subMarketIndex];
+      predictPayload.expectedLine = market.lines[submarketIndex];
+      predictPayload.expectedProbability = market.probabilities[submarketIndex];
+      predictPayload.expectedDuration = market.durations[submarketIndex];
     }
 
     return this._api.predictMutation(predictPayload);
