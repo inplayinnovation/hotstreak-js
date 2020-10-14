@@ -52,6 +52,11 @@ const PREDICTIONS_QUERY = gql`
       ...PredictionFragment
       opponent {
         ...OpponentFragment
+        game {
+          league {
+            ...LeagueFragment
+          }
+        }
         participants {
           ...ParticipantFragment
           player {
@@ -63,6 +68,11 @@ const PREDICTIONS_QUERY = gql`
         ...ParticipantFragment
         opponent {
           ...OpponentFragment
+          game {
+            league {
+              ...LeagueFragment
+            }
+          }
         }
         player {
           ...PlayerFragment
@@ -72,6 +82,7 @@ const PREDICTIONS_QUERY = gql`
   }
   ${PREDICTION_FRAGMENT}
   ${OPPONENT_FRAGMENT}
+  ${LEAGUE_FRAGMENT}
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
 `;
