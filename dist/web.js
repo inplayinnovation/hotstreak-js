@@ -42615,6 +42615,11 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
       ...PredictionFragment
       opponent {
         ...OpponentFragment
+        game {
+          league {
+            ...LeagueFragment
+          }
+        }
         participants {
           ...ParticipantFragment
           player {
@@ -42626,6 +42631,11 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
         ...ParticipantFragment
         opponent {
           ...OpponentFragment
+          game {
+            league {
+              ...LeagueFragment
+            }
+          }
         }
         player {
           ...PlayerFragment
@@ -42635,6 +42645,7 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
   }
   ${_fragments.PREDICTION_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
+  ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
 `;
