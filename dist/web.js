@@ -42319,6 +42319,9 @@ class API {
           id: targetId
         };
       });
+      game.opponents.forEach(opponent => {
+        opponent.score = game.scores[opponent.id];
+      });
     });
     return games;
   }
@@ -42396,6 +42399,7 @@ const GAME_FRAGMENT = (0, _graphqlRequest.gql)`
     period
     replay
     scheduledAt
+    scores
     status
   }
 `;
@@ -42442,7 +42446,6 @@ const OPPONENT_FRAGMENT = (0, _graphqlRequest.gql)`
       id
     }
     id
-    score
     team {
       ...TeamFragment
     }
@@ -42756,6 +42759,10 @@ class HotStreak {
         status,
         timestamp
       } = data;
+      const fixedScores = {};
+      Object.keys(scores).forEach(opponentId => {
+        fixedScores[`Opponent:${opponentId}`] = scores[opponentId];
+      });
       const {
         clock,
         elapsed,
@@ -42774,12 +42781,13 @@ class HotStreak {
         clock,
         elapsed,
         event,
-        opponents: Object.keys(scores).map(id => ({
+        opponents: Object.keys(fixedScores).map(id => ({
           __typename: 'Opponent',
-          id: `Opponent:${id}`,
-          score: scores[id]
+          id,
+          score: fixedScores[id]
         })),
         period,
+        scores: fixedScores,
         status
       };
 
