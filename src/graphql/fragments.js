@@ -23,6 +23,7 @@ const GAME_FRAGMENT = gql`
     period
     replay
     scheduledAt
+    scores
     status
   }
 `;
@@ -69,7 +70,6 @@ const OPPONENT_FRAGMENT = gql`
       id
     }
     id
-    score
     team {
       ...TeamFragment
     }

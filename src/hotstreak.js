@@ -72,6 +72,12 @@ class HotStreak {
     const channel = this._pusher.subscribe(channelName);
     channel.bind('update', data => {
       const { clocks, id, event, markets, scores, status, timestamp } = data;
+
+      const fixedScores = {};
+      Object.keys(scores).forEach(opponentId => {
+        fixedScores[`Opponent:${opponentId}`] = scores[opponentId];
+      });
+
       const { clock, elapsed, period } = clocks.game;
 
       if (this._lastTimestamp && timestamp < this._lastTimestamp) {
@@ -87,12 +93,13 @@ class HotStreak {
         clock,
         elapsed,
         event,
-        opponents: Object.keys(scores).map(id => ({
+        opponents: Object.keys(fixedScores).map(id => ({
           __typename: 'Opponent',
-          id: `Opponent:${id}`,
-          score: scores[id]
+          id,
+          score: fixedScores[id]
         })),
         period,
+        scores: fixedScores,
         status
       };
 

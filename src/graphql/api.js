@@ -24,6 +24,9 @@ class API {
           id: targetId
         };
       });
+      game.opponents.forEach(opponent => {
+        opponent.score = game.scores[opponent.id];
+      });
     });
     return games;
   }
