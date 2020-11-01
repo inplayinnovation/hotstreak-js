@@ -8,7 +8,8 @@ import {
   PARTICIPANT_FRAGMENT,
   PLAYER_FRAGMENT,
   PREDICTION_FRAGMENT,
-  SITUATION_FRAGMENT
+  SITUATION_FRAGMENT,
+  TOURNAMENT_FRAGMENT
 } from './fragments';
 
 const GAMES_QUERY = gql`
@@ -35,6 +36,11 @@ const GAMES_QUERY = gql`
           ...SituationFragment
         }
       }
+      ... on GolfGame {
+        tournament {
+          ...TournamentFragment
+        }
+      }
     }
   }
   ${GAME_FRAGMENT}
@@ -44,6 +50,7 @@ const GAMES_QUERY = gql`
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
   ${SITUATION_FRAGMENT}
+  ${TOURNAMENT_FRAGMENT}
 `;
 
 const PREDICTIONS_QUERY = gql`

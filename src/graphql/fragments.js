@@ -148,6 +148,16 @@ const SITUATION_FRAGMENT = gql`
   }
 `;
 
+const TOURNAMENT_FRAGMENT = gql`
+  fragment TournamentFragment on Tournament {
+    __typename
+    createdAt
+    id
+    name
+    updatedAt
+  }
+`;
+
 export {
   GAME_FRAGMENT,
   LEAGUE_FRAGMENT,
@@ -157,5 +167,6 @@ export {
   PREDICTION_FRAGMENT,
   PLAYER_FRAGMENT,
   SITUATION_FRAGMENT,
-  TEAM_FRAGMENT
+  TEAM_FRAGMENT,
+  TOURNAMENT_FRAGMENT
 };
