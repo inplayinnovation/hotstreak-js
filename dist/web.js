@@ -42372,7 +42372,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
+exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42524,6 +42524,16 @@ const SITUATION_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.SITUATION_FRAGMENT = SITUATION_FRAGMENT;
+const TOURNAMENT_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment TournamentFragment on Tournament {
+    __typename
+    createdAt
+    id
+    name
+    updatedAt
+  }
+`;
+exports.TOURNAMENT_FRAGMENT = TOURNAMENT_FRAGMENT;
 
 },{"graphql-request":104}],232:[function(require,module,exports){
 "use strict";
@@ -42601,6 +42611,11 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
           ...SituationFragment
         }
       }
+      ... on GolfGame {
+        tournament {
+          ...TournamentFragment
+        }
+      }
     }
   }
   ${_fragments.GAME_FRAGMENT}
@@ -42610,6 +42625,7 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
   ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.TOURNAMENT_FRAGMENT}
 `;
 exports.GAMES_QUERY = GAMES_QUERY;
 const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
