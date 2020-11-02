@@ -135,7 +135,8 @@ class HotStreak {
           '|'
         );
         const [targetId, category, position = null] = id.split(',');
-        return {
+
+        const market = {
           __typename: 'Market',
           id,
           affinity: parseFloat(affinity),
@@ -147,12 +148,29 @@ class HotStreak {
           },
           lines: lines.split(',').map(parseFloat),
           position,
-          probabilities: probabilities.split(',').map(parseFloat),
-          target: {
-            __typename: targetId.split(':')[0],
-            id: targetId
-          }
+          probabilities: probabilities.split(',').map(parseFloat)
         };
+
+        const targetIdComponents = targetId.split(':');
+        const __typename = targetIdComponents[0];
+        if (__typename === 'Golf') {
+          const [participantId, holeId] = targetIdComponents[3].split('#');
+          market.hole = {
+            __typename: 'Hole',
+            id: `Hole:${holeId}`
+          };
+          market.target = {
+            __typename: 'Participant',
+            id: `Participant:${participantId}`
+          };
+        } else {
+          market.target = {
+            __typename,
+            id: targetId
+          };
+        }
+
+        return market;
       });
 
       callback(game, parsedMarkets);
