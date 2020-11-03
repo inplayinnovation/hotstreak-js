@@ -9,7 +9,7 @@ function marketIdToJson(marketId) {
     const [participantId, holeId] = targetIdComponents[3].split('#');
     hole = {
       __typename: 'Hole',
-      id: `Hole:${holeId}`
+      id: `Golf::Hole:${holeId}`
     };
     target = {
       __typename: 'Participant',
