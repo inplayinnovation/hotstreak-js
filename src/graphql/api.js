@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 import { GAMES_QUERY, PREDICTIONS_QUERY, SYSTEM_QUERY } from './queries';
+import { marketIdToJson } from '../helpers';
 import { PREDICT_MUTATION } from './mutations';
 
 class API {
@@ -12,16 +13,10 @@ class API {
     const { games } = await this._graphQLClient.request(GAMES_QUERY);
     games.forEach(game => {
       game.markets.forEach(market => {
-        const [targetId, category, position = null] = market.id.split(',');
-        market.category = category;
+        Object.assign(market, marketIdToJson(market.id));
         market.game = {
           __typename: 'Game',
           id: game.id
-        };
-        market.position = position;
-        market.target = {
-          __typename: targetId.split(':')[0],
-          id: targetId
         };
       });
       game.opponents.forEach(opponent => {

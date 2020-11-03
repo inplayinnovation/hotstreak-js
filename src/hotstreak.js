@@ -1,5 +1,6 @@
 import API from './graphql/api';
 import JWT from './jwt';
+import { marketIdToJson } from './helpers';
 import Pusher from 'pusher-js';
 
 class HotStreak {
@@ -134,41 +135,21 @@ class HotStreak {
         const [probabilities, lines, durations, affinity] = markets[id].split(
           '|'
         );
-        const [targetId, category, position = null] = id.split(',');
 
         const market = {
           __typename: 'Market',
           id,
           affinity: parseFloat(affinity),
-          category,
           durations: durations ? durations.split(',').map(parseFloat) : null,
           game: {
             __typename: 'Game',
             id: gameId
           },
           lines: lines.split(',').map(parseFloat),
-          position,
           probabilities: probabilities.split(',').map(parseFloat)
         };
 
-        const targetIdComponents = targetId.split(':');
-        const __typename = targetIdComponents[0];
-        if (__typename === 'Golf') {
-          const [participantId, holeId] = targetIdComponents[3].split('#');
-          market.hole = {
-            __typename: 'Hole',
-            id: `Hole:${holeId}`
-          };
-          market.target = {
-            __typename: 'Participant',
-            id: `Participant:${participantId}`
-          };
-        } else {
-          market.target = {
-            __typename,
-            id: targetId
-          };
-        }
+        Object.assign(market, marketIdToJson(id));
 
         return market;
       });
