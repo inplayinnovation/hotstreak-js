@@ -42292,6 +42292,8 @@ var _graphqlRequest = require("graphql-request");
 
 var _queries = require("./queries");
 
+var _helpers = require("../helpers");
+
 var _mutations = require("./mutations");
 
 class API {
@@ -42307,16 +42309,10 @@ class API {
     } = await this._graphQLClient.request(_queries.GAMES_QUERY);
     games.forEach(game => {
       game.markets.forEach(market => {
-        const [targetId, category, position = null] = market.id.split(',');
-        market.category = category;
+        Object.assign(market, (0, _helpers.marketIdToJson)(market.id));
         market.game = {
           __typename: 'Game',
           id: game.id
-        };
-        market.position = position;
-        market.target = {
-          __typename: targetId.split(':')[0],
-          id: targetId
         };
       });
       game.opponents.forEach(opponent => {
@@ -42366,7 +42362,7 @@ class API {
 var _default = API;
 exports.default = _default;
 
-},{"./mutations":232,"./queries":233,"graphql-request":104}],231:[function(require,module,exports){
+},{"../helpers":234,"./mutations":232,"./queries":233,"graphql-request":104}],231:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42686,11 +42682,53 @@ exports.SYSTEM_QUERY = SYSTEM_QUERY;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.marketIdToJson = marketIdToJson;
+
+function marketIdToJson(marketId) {
+  const [targetId, category, position = null] = marketId.split(',');
+  let hole = null,
+      target;
+  const targetIdComponents = targetId.split(':');
+  const __typename = targetIdComponents[0];
+
+  if (__typename === 'Golf') {
+    const [participantId, holeId] = targetIdComponents[3].split('#');
+    hole = {
+      __typename: 'Hole',
+      id: `Hole:${holeId}`
+    };
+    target = {
+      __typename: 'Participant',
+      id: `Participant:${participantId}`
+    };
+  } else {
+    target = {
+      __typename,
+      id: targetId
+    };
+  }
+
+  return {
+    category,
+    hole,
+    position,
+    target
+  };
+}
+
+},{}],235:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.default = void 0;
 
 var _api = _interopRequireDefault(require("./graphql/api"));
 
 var _jwt = _interopRequireDefault(require("./jwt"));
+
+var _helpers = require("./helpers");
 
 var _pusherJs = _interopRequireDefault(require("pusher-js"));
 
@@ -42836,41 +42874,19 @@ class HotStreak {
 
       const parsedMarkets = Object.keys(markets).map(id => {
         const [probabilities, lines, durations, affinity] = markets[id].split('|');
-        const [targetId, category, position = null] = id.split(',');
         const market = {
           __typename: 'Market',
           id,
           affinity: parseFloat(affinity),
-          category,
           durations: durations ? durations.split(',').map(parseFloat) : null,
           game: {
             __typename: 'Game',
             id: gameId
           },
           lines: lines.split(',').map(parseFloat),
-          position,
           probabilities: probabilities.split(',').map(parseFloat)
         };
-        const targetIdComponents = targetId.split(':');
-        const __typename = targetIdComponents[0];
-
-        if (__typename === 'Golf') {
-          const [participantId, holeId] = targetIdComponents[3].split('#');
-          market.hole = {
-            __typename: 'Hole',
-            id: `Hole:${holeId}`
-          };
-          market.target = {
-            __typename: 'Participant',
-            id: `Participant:${participantId}`
-          };
-        } else {
-          market.target = {
-            __typename,
-            id: targetId
-          };
-        }
-
+        Object.assign(market, (0, _helpers.marketIdToJson)(id));
         return market;
       });
       callback(game, parsedMarkets);
@@ -42894,7 +42910,7 @@ class HotStreak {
 var _default = HotStreak;
 exports.default = _default;
 
-},{"./graphql/api":230,"./jwt":235,"pusher-js":193}],235:[function(require,module,exports){
+},{"./graphql/api":230,"./helpers":234,"./jwt":236,"pusher-js":193}],236:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42918,5 +42934,5 @@ var _default = {
 };
 exports.default = _default;
 
-},{"jsonwebtoken":148}]},{},[234])(234)
+},{"jsonwebtoken":148}]},{},[235])(235)
 });
