@@ -28,6 +28,18 @@ const GAME_FRAGMENT = gql`
   }
 `;
 
+const HOLE_FRAGMENT = gql`
+  fragment HoleFragment on Hole {
+    __typename
+    createdAt
+    id
+    number
+    par
+    updatedAt
+    yardage
+  }
+`;
+
 const LEAGUE_FRAGMENT = gql`
   fragment LeagueFragment on League {
     __typename
@@ -160,6 +172,7 @@ const TOURNAMENT_FRAGMENT = gql`
 
 export {
   GAME_FRAGMENT,
+  HOLE_FRAGMENT,
   LEAGUE_FRAGMENT,
   MARKET_FRAGMENT,
   OPPONENT_FRAGMENT,

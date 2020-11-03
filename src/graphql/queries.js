@@ -2,6 +2,7 @@ import { gql } from 'graphql-request';
 
 import {
   GAME_FRAGMENT,
+  HOLE_FRAGMENT,
   LEAGUE_FRAGMENT,
   MARKET_FRAGMENT,
   OPPONENT_FRAGMENT,
@@ -39,6 +40,9 @@ const GAMES_QUERY = gql`
       ... on GolfGame {
         tournament {
           ...TournamentFragment
+          holes {
+            ...HoleFragment
+          }
         }
       }
     }
@@ -51,6 +55,7 @@ const GAMES_QUERY = gql`
   ${PLAYER_FRAGMENT}
   ${SITUATION_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
+  ${HOLE_FRAGMENT}
 `;
 
 const PREDICTIONS_QUERY = gql`
