@@ -42335,10 +42335,13 @@ class API {
         prediction.target = prediction.opponent;
       } else if (prediction.participant) {
         prediction.target = prediction.participant;
+      } else if (prediction.scoreCard) {
+        prediction.target = prediction.scoreCard;
       }
 
       delete prediction.opponent;
       delete prediction.participant;
+      delete prediction.scoreCard;
     });
     return predictions;
   }
