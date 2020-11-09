@@ -134,6 +134,10 @@ const PREDICTION_FRAGMENT = gql`
     sequence
     state
     subject
+    target {
+      __typename
+      id
+    }
     updatedAt
   }
 `;
