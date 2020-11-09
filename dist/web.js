@@ -42506,6 +42506,10 @@ const PREDICTION_FRAGMENT = (0, _graphqlRequest.gql)`
     sequence
     state
     subject
+    target {
+      __typename
+      id
+    }
     updatedAt
   }
 `;
