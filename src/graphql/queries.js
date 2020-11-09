@@ -9,6 +9,7 @@ import {
   PARTICIPANT_FRAGMENT,
   PLAYER_FRAGMENT,
   PREDICTION_FRAGMENT,
+  SCORECARD_FRAGMENT,
   SITUATION_FRAGMENT,
   TOURNAMENT_FRAGMENT
 } from './fragments';
@@ -90,6 +91,18 @@ const PREDICTIONS_QUERY = gql`
           ...PlayerFragment
         }
       }
+      scoreCard {
+        ...ScoreCardFragment
+        hole {
+          ...HoleFragment
+        }
+        participant {
+          ...ParticipantFragment
+          player {
+            ...PlayerFragment
+          }
+        }
+      }
     }
   }
   ${PREDICTION_FRAGMENT}
@@ -97,6 +110,8 @@ const PREDICTIONS_QUERY = gql`
   ${LEAGUE_FRAGMENT}
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
+  ${SCORECARD_FRAGMENT}
+  ${HOLE_FRAGMENT}
 `;
 
 const SYSTEM_QUERY = gql`

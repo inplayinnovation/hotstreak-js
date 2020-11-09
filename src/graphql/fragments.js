@@ -134,7 +134,20 @@ const PREDICTION_FRAGMENT = gql`
     sequence
     state
     subject
-    target {
+    updatedAt
+  }
+`;
+
+const SCORECARD_FRAGMENT = gql`
+  fragment ScoreCardFragment on ScoreCard {
+    __typename
+    createdAt
+    hole {
+      __typename
+      id
+    }
+    id
+    participant {
       __typename
       id
     }
@@ -179,6 +192,7 @@ export {
   PARTICIPANT_FRAGMENT,
   PREDICTION_FRAGMENT,
   PLAYER_FRAGMENT,
+  SCORECARD_FRAGMENT,
   SITUATION_FRAGMENT,
   TEAM_FRAGMENT,
   TOURNAMENT_FRAGMENT
