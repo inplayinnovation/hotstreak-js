@@ -1,19 +1,22 @@
 function marketIdToJson(marketId) {
   const [targetId, category, position = null] = marketId.split(',');
 
-  let hole = null,
-    target;
+  let target;
   const targetIdComponents = targetId.split(':');
   const __typename = targetIdComponents[0];
   if (__typename === 'Golf') {
     const [participantId, holeId] = targetIdComponents[3].split('#');
-    hole = {
-      __typename: 'Hole',
-      id: `Golf::Hole:${holeId}`
-    };
     target = {
-      __typename: 'Participant',
-      id: `Participant:${participantId}`
+      __typename: 'ScoreCard',
+      id: targetId,
+      hole: {
+        __typename: 'Hole',
+        id: `Golf::Hole:${holeId}`
+      },
+      participant: {
+        __typename: 'Participant',
+        id: `Participant:${participantId}`
+      }
     };
   } else {
     target = {
@@ -22,12 +25,12 @@ function marketIdToJson(marketId) {
     };
   }
 
-  return {
-    category,
-    hole,
-    position,
-    target
-  };
+  const json = { category, target };
+  if (position) {
+    json.position = position;
+  }
+
+  return json;
 }
 
 export { marketIdToJson };
