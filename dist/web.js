@@ -42368,7 +42368,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
+exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42506,14 +42506,27 @@ const PREDICTION_FRAGMENT = (0, _graphqlRequest.gql)`
     sequence
     state
     subject
-    target {
+    updatedAt
+  }
+`;
+exports.PREDICTION_FRAGMENT = PREDICTION_FRAGMENT;
+const SCORECARD_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment ScoreCardFragment on ScoreCard {
+    __typename
+    createdAt
+    hole {
+      __typename
+      id
+    }
+    id
+    participant {
       __typename
       id
     }
     updatedAt
   }
 `;
-exports.PREDICTION_FRAGMENT = PREDICTION_FRAGMENT;
+exports.SCORECARD_FRAGMENT = SCORECARD_FRAGMENT;
 const SITUATION_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment SituationFragment on Situation {
     __typename
@@ -42672,6 +42685,18 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
           ...PlayerFragment
         }
       }
+      scoreCard {
+        ...ScoreCardFragment
+        hole {
+          ...HoleFragment
+        }
+        participant {
+          ...ParticipantFragment
+          player {
+            ...PlayerFragment
+          }
+        }
+      }
     }
   }
   ${_fragments.PREDICTION_FRAGMENT}
@@ -42679,6 +42704,8 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
+  ${_fragments.SCORECARD_FRAGMENT}
+  ${_fragments.HOLE_FRAGMENT}
 `;
 exports.PREDICTIONS_QUERY = PREDICTIONS_QUERY;
 const SYSTEM_QUERY = (0, _graphqlRequest.gql)`
