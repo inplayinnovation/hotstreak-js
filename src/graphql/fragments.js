@@ -47,6 +47,8 @@ const LEAGUE_FRAGMENT = gql`
     broadcastChannel
     id
     name
+    overtimeClock
+    overtimePeriods
     regulationClock
     regulationPeriods
   }
