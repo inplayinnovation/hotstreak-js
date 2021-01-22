@@ -30457,7 +30457,7 @@ module.exports = function xor (a, b) {
 "use strict";
 
 /*!
- * Pusher JavaScript Library v7.0.0
+ * Pusher JavaScript Library v7.0.2
  * https://pusher.com/
  *
  * Copyright 2020, Pusher
@@ -31315,7 +31315,7 @@ module.exports = function xor (a, b) {
       var ScriptReceivers = new ScriptReceiverFactory('_pusher_script_', 'Pusher.ScriptReceivers'); // CONCATENATED MODULE: ./src/core/defaults.ts
 
       var Defaults = {
-        VERSION: "7.0.0",
+        VERSION: "7.0.2",
         PROTOCOL: 7,
         wsPort: 80,
         wssPort: 443,
@@ -33358,6 +33358,7 @@ module.exports = function xor (a, b) {
           this.subscriptionCancelled = false;
           this.authorize(this.pusher.connection.socket_id, function (error, data) {
             if (error) {
+              _this.subscriptionPending = false;
               logger.error(error.toString());
 
               _this.emit('pusher:subscription_error', Object.assign({}, {
@@ -35913,7 +35914,7 @@ module.exports = function xor (a, b) {
           } else {
             channel = this.channels.remove(channel_name);
 
-            if (channel && this.connection.state === 'connected') {
+            if (channel && channel.subscribed) {
               channel.unsubscribe();
             }
           }
@@ -42422,6 +42423,8 @@ const LEAGUE_FRAGMENT = (0, _graphqlRequest.gql)`
     broadcastChannel
     id
     name
+    overtimeClock
+    overtimePeriods
     regulationClock
     regulationPeriods
   }
