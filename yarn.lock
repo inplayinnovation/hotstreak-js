@@ -1365,9 +1365,9 @@ punycode@^1.3.2:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
   integrity sha1-wNWmOycYgArY4esPpSachN1BhF4=
 
-"pusher-js@https://github.com/giaset/pusher-js":
-  version "7.0.0"
-  resolved "https://github.com/giaset/pusher-js#7a16d1b787e08e313598a08eb3f1e858b7eec2be"
+"pusher-js@https://github.com/pusher/pusher-js":
+  version "7.0.2"
+  resolved "https://github.com/pusher/pusher-js#9caf745664b2d27b6cc1cde93ae4e664d54e703b"
   dependencies:
     tweetnacl "^1.0.3"
 
