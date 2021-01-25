@@ -59,6 +59,15 @@ const GAMES_QUERY = gql`
   ${HOLE_FRAGMENT}
 `;
 
+const MARKET_QUERY = gql`
+  query MarketQuery($gameId: ID!, $marketId: ID!) {
+    market(gameId: $gameId, marketId: $marketId) {
+      ...MarketFragment
+    }
+  }
+  ${MARKET_FRAGMENT}
+`;
+
 const PREDICTIONS_QUERY = gql`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
@@ -124,4 +133,4 @@ const SYSTEM_QUERY = gql`
   }
 `;
 
-export { GAMES_QUERY, PREDICTIONS_QUERY, SYSTEM_QUERY };
+export { GAMES_QUERY, MARKET_QUERY, PREDICTIONS_QUERY, SYSTEM_QUERY };

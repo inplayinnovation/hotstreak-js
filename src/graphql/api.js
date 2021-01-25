@@ -1,6 +1,11 @@
 import { GraphQLClient } from 'graphql-request';
 
-import { GAMES_QUERY, PREDICTIONS_QUERY, SYSTEM_QUERY } from './queries';
+import {
+  GAMES_QUERY,
+  MARKET_QUERY,
+  PREDICTIONS_QUERY,
+  SYSTEM_QUERY
+} from './queries';
 import { marketIdToJson } from '../helpers';
 import { PREDICT_MUTATION } from './mutations';
 
@@ -24,6 +29,15 @@ class API {
       });
     });
     return games;
+  }
+
+  async marketQuery(gameId, marketId) {
+    const variables = { gameId, marketId };
+    const { market } = await this._graphQLClient.request(
+      MARKET_QUERY,
+      variables
+    );
+    return market;
   }
 
   async predictionsQuery(page, meta) {
