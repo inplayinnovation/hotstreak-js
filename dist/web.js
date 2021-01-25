@@ -30457,7 +30457,7 @@ module.exports = function xor (a, b) {
 "use strict";
 
 /*!
- * Pusher JavaScript Library v7.0.2
+ * Pusher JavaScript Library v7.0.3
  * https://pusher.com/
  *
  * Copyright 2020, Pusher
@@ -31315,7 +31315,7 @@ module.exports = function xor (a, b) {
       var ScriptReceivers = new ScriptReceiverFactory('_pusher_script_', 'Pusher.ScriptReceivers'); // CONCATENATED MODULE: ./src/core/defaults.ts
 
       var Defaults = {
-        VERSION: "7.0.2",
+        VERSION: "7.0.3",
         PROTOCOL: 7,
         wsPort: 80,
         wssPort: 443,
@@ -42323,6 +42323,17 @@ class API {
     return games;
   }
 
+  async marketQuery(gameId, marketId) {
+    const variables = {
+      gameId,
+      marketId
+    };
+    const {
+      market
+    } = await this._graphQLClient.request(_queries.MARKET_QUERY, variables);
+    return market;
+  }
+
   async predictionsQuery(page, meta) {
     const variables = {
       meta,
@@ -42612,7 +42623,7 @@ exports.PREDICT_MUTATION = PREDICT_MUTATION;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.GAMES_QUERY = void 0;
+exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.MARKET_QUERY = exports.GAMES_QUERY = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42663,6 +42674,15 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.HOLE_FRAGMENT}
 `;
 exports.GAMES_QUERY = GAMES_QUERY;
+const MARKET_QUERY = (0, _graphqlRequest.gql)`
+  query MarketQuery($gameId: ID!, $marketId: ID!) {
+    market(gameId: $gameId, marketId: $marketId) {
+      ...MarketFragment
+    }
+  }
+  ${_fragments.MARKET_FRAGMENT}
+`;
+exports.MARKET_QUERY = MARKET_QUERY;
 const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
@@ -42852,6 +42872,10 @@ class HotStreak {
 
   fetchGames() {
     return this._api.gamesQuery();
+  }
+
+  fetchMarket(gameId, marketId) {
+    return this._api.marketQuery(gameId, marketId);
   }
 
   fetchPredictions(page = 1, meta) {
