@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 import {
+  GAME_QUERY,
   GAMES_QUERY,
   MARKET_QUERY,
   PREDICTIONS_QUERY,
@@ -14,16 +15,25 @@ class API {
     this._graphQLClient = new GraphQLClient(baseUrl + '/graphql', { headers });
   }
 
+  async gameQuery(id) {
+    const variables = { id };
+    const { game } = await this._graphQLClient.request(GAME_QUERY, variables);
+    game.opponents.forEach(opponent => {
+      opponent.score = game.scores[opponent.id];
+    });
+    game.markets.forEach(market => {
+      Object.assign(market, marketIdToJson(market.id));
+      market.game = {
+        __typename: 'Game',
+        id: game.id
+      };
+    });
+    return game;
+  }
+
   async gamesQuery() {
     const { games } = await this._graphQLClient.request(GAMES_QUERY);
     games.forEach(game => {
-      game.markets.forEach(market => {
-        Object.assign(market, marketIdToJson(market.id));
-        market.game = {
-          __typename: 'Game',
-          id: game.id
-        };
-      });
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];
       });

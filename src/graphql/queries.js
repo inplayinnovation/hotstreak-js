@@ -14,9 +14,9 @@ import {
   TOURNAMENT_FRAGMENT
 } from './fragments';
 
-const GAMES_QUERY = gql`
-  query GamesQuery {
-    games {
+const GAME_QUERY = gql`
+  query GameQuery($id: ID!) {
+    game(id: $id) {
       ...GameFragment
       league {
         ...LeagueFragment
@@ -54,6 +54,39 @@ const GAMES_QUERY = gql`
   ${OPPONENT_FRAGMENT}
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
+  ${SITUATION_FRAGMENT}
+  ${TOURNAMENT_FRAGMENT}
+  ${HOLE_FRAGMENT}
+`;
+
+const GAMES_QUERY = gql`
+  query GamesQuery {
+    games {
+      ...GameFragment
+      league {
+        ...LeagueFragment
+      }
+      opponents {
+        ...OpponentFragment
+      }
+      ... on FootballGame {
+        situation {
+          ...SituationFragment
+        }
+      }
+      ... on GolfGame {
+        tournament {
+          ...TournamentFragment
+          holes {
+            ...HoleFragment
+          }
+        }
+      }
+    }
+  }
+  ${GAME_FRAGMENT}
+  ${LEAGUE_FRAGMENT}
+  ${OPPONENT_FRAGMENT}
   ${SITUATION_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
@@ -133,4 +166,10 @@ const SYSTEM_QUERY = gql`
   }
 `;
 
-export { GAMES_QUERY, MARKET_QUERY, PREDICTIONS_QUERY, SYSTEM_QUERY };
+export {
+  GAME_QUERY,
+  GAMES_QUERY,
+  MARKET_QUERY,
+  PREDICTIONS_QUERY,
+  SYSTEM_QUERY
+};

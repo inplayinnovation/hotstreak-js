@@ -58,7 +58,7 @@ const hotstreak = new HotStreak({
 const games = await hotstreak.fetchGames();
 // TODO: push games to your store
 
-hotstreak.subscribeToChannel(games[0].broadcastChannel, (game, markets) => {
+hotstreak.subscribeToGame(games[0], (game, markets) => {
   // TODO: push game & markets to your store
   console.log(game);
   console.log(markets);
