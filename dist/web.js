@@ -42412,10 +42412,6 @@ const GAME_FRAGMENT = (0, _graphqlRequest.gql)`
       __typename
       id
     }
-    markets {
-      __typename
-      id
-    }
     opponents {
       __typename
       id
