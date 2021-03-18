@@ -31,8 +31,9 @@ class API {
     return game;
   }
 
-  async gamesQuery() {
-    const { games } = await this._graphQLClient.request(GAMES_QUERY);
+  async gamesQuery(status) {
+    const variables = status ? { status } : null;
+    const { games } = await this._graphQLClient.request(GAMES_QUERY, variables);
     games.forEach(game => {
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];

@@ -60,8 +60,8 @@ const GAME_QUERY = gql`
 `;
 
 const GAMES_QUERY = gql`
-  query GamesQuery {
-    games {
+  query GamesQuery($status: String) {
+    games(status: $status) {
       ...GameFragment
       league {
         ...LeagueFragment
