@@ -2,7 +2,8 @@ import { GraphQLClient } from 'graphql-request';
 
 import {
   GAME_QUERY,
-  GAMES_QUERY,
+  LIGHT_GAMES_QUERY,
+  HEAVY_GAMES_QUERY,
   MARKET_QUERY,
   PREDICTIONS_QUERY,
   SYSTEM_QUERY
@@ -32,8 +33,9 @@ class API {
   }
 
   async gamesQuery(status) {
+    const query = status ? HEAVY_GAMES_QUERY : LIGHT_GAMES_QUERY;
     const variables = status ? { status } : null;
-    const { games } = await this._graphQLClient.request(GAMES_QUERY, variables);
+    const { games } = await this._graphQLClient.request(query, variables);
     games.forEach(game => {
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];

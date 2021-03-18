@@ -59,9 +59,9 @@ const GAME_QUERY = gql`
   ${HOLE_FRAGMENT}
 `;
 
-const GAMES_QUERY = gql`
-  query GamesQuery($status: String) {
-    games(status: $status) {
+const LIGHT_GAMES_QUERY = gql`
+  query LightGamesQuery() {
+    games() {
       ...GameFragment
       league {
         ...LeagueFragment
@@ -87,6 +87,51 @@ const GAMES_QUERY = gql`
   ${GAME_FRAGMENT}
   ${LEAGUE_FRAGMENT}
   ${OPPONENT_FRAGMENT}
+  ${SITUATION_FRAGMENT}
+  ${TOURNAMENT_FRAGMENT}
+  ${HOLE_FRAGMENT}
+`;
+
+const HEAVY_GAMES_QUERY = gql`
+  query HeavyGamesQuery($status: String) {
+    games(status: $status) {
+      ...GameFragment
+      league {
+        ...LeagueFragment
+      }
+      markets {
+        ...MarketFragment
+      }
+      opponents {
+        ...OpponentFragment
+        participants {
+          ...ParticipantFragment
+          player {
+            ...PlayerFragment
+          }
+        }
+      }
+      ... on FootballGame {
+        situation {
+          ...SituationFragment
+        }
+      }
+      ... on GolfGame {
+        tournament {
+          ...TournamentFragment
+          holes {
+            ...HoleFragment
+          }
+        }
+      }
+    }
+  }
+  ${GAME_FRAGMENT}
+  ${LEAGUE_FRAGMENT}
+  ${MARKET_FRAGMENT}
+  ${OPPONENT_FRAGMENT}
+  ${PARTICIPANT_FRAGMENT}
+  ${PLAYER_FRAGMENT}
   ${SITUATION_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
@@ -168,7 +213,8 @@ const SYSTEM_QUERY = gql`
 
 export {
   GAME_QUERY,
-  GAMES_QUERY,
+  LIGHT_GAMES_QUERY,
+  HEAVY_GAMES_QUERY,
   MARKET_QUERY,
   PREDICTIONS_QUERY,
   SYSTEM_QUERY
