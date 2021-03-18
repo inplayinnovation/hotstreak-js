@@ -42324,10 +42324,13 @@ class API {
     return game;
   }
 
-  async gamesQuery() {
+  async gamesQuery(status) {
+    const variables = status ? {
+      status
+    } : null;
     const {
       games
-    } = await this._graphQLClient.request(_queries.GAMES_QUERY);
+    } = await this._graphQLClient.request(_queries.GAMES_QUERY, variables);
     games.forEach(game => {
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];
@@ -42684,8 +42687,8 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
 `;
 exports.GAME_QUERY = GAME_QUERY;
 const GAMES_QUERY = (0, _graphqlRequest.gql)`
-  query GamesQuery {
-    games {
+  query GamesQuery($status: String) {
+    games(status: $status) {
       ...GameFragment
       league {
         ...LeagueFragment
@@ -42916,8 +42919,8 @@ class HotStreak {
     return this._api.gameQuery(id);
   }
 
-  fetchGames() {
-    return this._api.gamesQuery();
+  fetchGames(status) {
+    return this._api.gamesQuery(status);
   }
 
   fetchMarket(gameId, marketId) {
