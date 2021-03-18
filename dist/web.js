@@ -42688,8 +42688,8 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
 `;
 exports.GAME_QUERY = GAME_QUERY;
 const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
-  query LightGamesQuery() {
-    games() {
+  query LightGamesQuery {
+    games {
       ...GameFragment
       league {
         ...LeagueFragment
