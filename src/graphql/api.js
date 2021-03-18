@@ -19,15 +19,15 @@ class API {
   async gameQuery(id) {
     const variables = { id };
     const { game } = await this._graphQLClient.request(GAME_QUERY, variables);
-    game.opponents.forEach(opponent => {
-      opponent.score = game.scores[opponent.id];
-    });
     game.markets.forEach(market => {
       Object.assign(market, marketIdToJson(market.id));
       market.game = {
         __typename: 'Game',
         id: game.id
       };
+    });
+    game.opponents.forEach(opponent => {
+      opponent.score = game.scores[opponent.id];
     });
     return game;
   }
@@ -37,6 +37,13 @@ class API {
     const variables = status ? { status } : null;
     const { games } = await this._graphQLClient.request(query, variables);
     games.forEach(game => {
+      (game.markets || []).forEach(market => {
+        Object.assign(market, marketIdToJson(market.id));
+        market.game = {
+          __typename: 'Game',
+          id: game.id
+        };
+      });
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];
       });
