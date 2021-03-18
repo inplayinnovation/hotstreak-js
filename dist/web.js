@@ -42325,12 +42325,13 @@ class API {
   }
 
   async gamesQuery(status) {
+    const query = status ? _queries.HEAVY_GAMES_QUERY : _queries.LIGHT_GAMES_QUERY;
     const variables = status ? {
       status
     } : null;
     const {
       games
-    } = await this._graphQLClient.request(_queries.GAMES_QUERY, variables);
+    } = await this._graphQLClient.request(query, variables);
     games.forEach(game => {
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];
@@ -42635,7 +42636,7 @@ exports.PREDICT_MUTATION = PREDICT_MUTATION;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.MARKET_QUERY = exports.GAMES_QUERY = exports.GAME_QUERY = void 0;
+exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.MARKET_QUERY = exports.HEAVY_GAMES_QUERY = exports.LIGHT_GAMES_QUERY = exports.GAME_QUERY = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42686,9 +42687,9 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.HOLE_FRAGMENT}
 `;
 exports.GAME_QUERY = GAME_QUERY;
-const GAMES_QUERY = (0, _graphqlRequest.gql)`
-  query GamesQuery($status: String) {
-    games(status: $status) {
+const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
+  query LightGamesQuery() {
+    games() {
       ...GameFragment
       league {
         ...LeagueFragment
@@ -42718,7 +42719,52 @@ const GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
 `;
-exports.GAMES_QUERY = GAMES_QUERY;
+exports.LIGHT_GAMES_QUERY = LIGHT_GAMES_QUERY;
+const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
+  query HeavyGamesQuery($status: String) {
+    games(status: $status) {
+      ...GameFragment
+      league {
+        ...LeagueFragment
+      }
+      markets {
+        ...MarketFragment
+      }
+      opponents {
+        ...OpponentFragment
+        participants {
+          ...ParticipantFragment
+          player {
+            ...PlayerFragment
+          }
+        }
+      }
+      ... on FootballGame {
+        situation {
+          ...SituationFragment
+        }
+      }
+      ... on GolfGame {
+        tournament {
+          ...TournamentFragment
+          holes {
+            ...HoleFragment
+          }
+        }
+      }
+    }
+  }
+  ${_fragments.GAME_FRAGMENT}
+  ${_fragments.LEAGUE_FRAGMENT}
+  ${_fragments.MARKET_FRAGMENT}
+  ${_fragments.OPPONENT_FRAGMENT}
+  ${_fragments.PARTICIPANT_FRAGMENT}
+  ${_fragments.PLAYER_FRAGMENT}
+  ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.TOURNAMENT_FRAGMENT}
+  ${_fragments.HOLE_FRAGMENT}
+`;
+exports.HEAVY_GAMES_QUERY = HEAVY_GAMES_QUERY;
 const MARKET_QUERY = (0, _graphqlRequest.gql)`
   query MarketQuery($gameId: ID!, $marketId: ID!) {
     market(gameId: $gameId, marketId: $marketId) {
