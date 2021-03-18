@@ -42311,15 +42311,15 @@ class API {
     const {
       game
     } = await this._graphQLClient.request(_queries.GAME_QUERY, variables);
-    game.opponents.forEach(opponent => {
-      opponent.score = game.scores[opponent.id];
-    });
     game.markets.forEach(market => {
       Object.assign(market, (0, _helpers.marketIdToJson)(market.id));
       market.game = {
         __typename: 'Game',
         id: game.id
       };
+    });
+    game.opponents.forEach(opponent => {
+      opponent.score = game.scores[opponent.id];
     });
     return game;
   }
@@ -42333,6 +42333,13 @@ class API {
       games
     } = await this._graphQLClient.request(query, variables);
     games.forEach(game => {
+      (game.markets || []).forEach(market => {
+        Object.assign(market, (0, _helpers.marketIdToJson)(market.id));
+        market.game = {
+          __typename: 'Game',
+          id: game.id
+        };
+      });
       game.opponents.forEach(opponent => {
         opponent.score = game.scores[opponent.id];
       });
