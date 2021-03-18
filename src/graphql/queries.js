@@ -60,8 +60,8 @@ const GAME_QUERY = gql`
 `;
 
 const LIGHT_GAMES_QUERY = gql`
-  query LightGamesQuery() {
-    games() {
+  query LightGamesQuery {
+    games {
       ...GameFragment
       league {
         ...LeagueFragment
