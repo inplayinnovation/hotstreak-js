@@ -42479,6 +42479,7 @@ const STATISTIC_FRAGMENT = (0, _graphqlRequest.gql)`
     }
     id
     participant {
+      __typename
       id
     }
     statisticType
