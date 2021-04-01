@@ -5,6 +5,7 @@ import {
   LIGHT_GAMES_QUERY,
   HEAVY_GAMES_QUERY,
   MARKET_QUERY,
+  PREDICTION_QUERY,
   PREDICTIONS_QUERY,
   SYSTEM_QUERY
 } from './queries';
@@ -58,6 +59,15 @@ class API {
       variables
     );
     return market;
+  }
+
+  async predictionQuery(predictionId) {
+    const variables = { predictionId };
+    const { prediction } = await this._graphQLClient.request(
+      PREDICTION_QUERY,
+      variables
+    );
+    return prediction;
   }
 
   async predictionsQuery(page, meta) {

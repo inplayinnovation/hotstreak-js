@@ -3,6 +3,7 @@ import { gql } from 'graphql-request';
 import {
   GAME_FRAGMENT,
   HOLE_FRAGMENT,
+  IMPLICATION_FRAGMENT,
   LEAGUE_FRAGMENT,
   MARKET_FRAGMENT,
   OPPONENT_FRAGMENT,
@@ -146,6 +147,19 @@ const MARKET_QUERY = gql`
   ${MARKET_FRAGMENT}
 `;
 
+const PREDICTION_QUERY = gql`
+  query PredictionQuery($predictionId: ID!) {
+    prediction(predictionId: $predictionId) {
+      ...PredictionFragment
+      implications {
+        ...ImplicationFragment
+      }
+    }
+  }
+  ${PREDICTION_FRAGMENT}
+  ${IMPLICATION_FRAGMENT}
+`;
+
 const PREDICTIONS_QUERY = gql`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
@@ -216,6 +230,7 @@ export {
   LIGHT_GAMES_QUERY,
   HEAVY_GAMES_QUERY,
   MARKET_QUERY,
+  PREDICTION_QUERY,
   PREDICTIONS_QUERY,
   SYSTEM_QUERY
 };

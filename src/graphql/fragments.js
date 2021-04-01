@@ -1,5 +1,19 @@
 import { gql } from 'graphql-request';
 
+const EVENT_FRAGMENT = gql`
+  fragment EventFragment on Event {
+    __typename
+    clock
+    createdAt
+    description
+    elapsedGameClock
+    id
+    period
+    updatedAt
+    wallClock
+  }
+`;
+
 const GAME_FRAGMENT = gql`
   fragment GameFragment on Game {
     __typename
@@ -34,6 +48,38 @@ const HOLE_FRAGMENT = gql`
     updatedAt
     yardage
   }
+`;
+
+const STATISTIC_FRAGMENT = gql`
+  fragment StatisticFragment on Statistic {
+    __typename
+    createdAt
+    event {
+      ...EventFragment
+    }
+    id
+    participant {
+      id
+    }
+    statisticType
+    updatedAt
+  }
+  ${EVENT_FRAGMENT}
+`;
+
+const IMPLICATION_FRAGMENT = gql`
+  fragment ImplicationFragment on Implication {
+    __typename
+    category
+    createdAt
+    delta
+    id
+    statistic {
+      ...StatisticFragment
+    }
+    updatedAt
+  }
+  ${STATISTIC_FRAGMENT}
 `;
 
 const LEAGUE_FRAGMENT = gql`
@@ -188,6 +234,7 @@ const TOURNAMENT_FRAGMENT = gql`
 export {
   GAME_FRAGMENT,
   HOLE_FRAGMENT,
+  IMPLICATION_FRAGMENT,
   LEAGUE_FRAGMENT,
   MARKET_FRAGMENT,
   OPPONENT_FRAGMENT,
