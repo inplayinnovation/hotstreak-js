@@ -59,6 +59,7 @@ const STATISTIC_FRAGMENT = gql`
     }
     id
     participant {
+      __typename
       id
     }
     statisticType
