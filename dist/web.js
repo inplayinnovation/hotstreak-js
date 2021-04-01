@@ -42358,6 +42358,16 @@ class API {
     return market;
   }
 
+  async predictionQuery(predictionId) {
+    const variables = {
+      predictionId
+    };
+    const {
+      prediction
+    } = await this._graphQLClient.request(_queries.PREDICTION_QUERY, variables);
+    return prediction;
+  }
+
   async predictionsQuery(page, meta) {
     const variables = {
       meta,
@@ -42407,10 +42417,23 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
+exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
+const EVENT_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment EventFragment on Event {
+    __typename
+    clock
+    createdAt
+    description
+    elapsedGameClock
+    id
+    period
+    updatedAt
+    wallClock
+  }
+`;
 const GAME_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment GameFragment on Game {
     __typename
@@ -42447,6 +42470,37 @@ const HOLE_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.HOLE_FRAGMENT = HOLE_FRAGMENT;
+const STATISTIC_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment StatisticFragment on Statistic {
+    __typename
+    createdAt
+    event {
+      ...EventFragment
+    }
+    id
+    participant {
+      id
+    }
+    statisticType
+    updatedAt
+  }
+  ${EVENT_FRAGMENT}
+`;
+const IMPLICATION_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment ImplicationFragment on Implication {
+    __typename
+    category
+    createdAt
+    delta
+    id
+    statistic {
+      ...StatisticFragment
+    }
+    updatedAt
+  }
+  ${STATISTIC_FRAGMENT}
+`;
+exports.IMPLICATION_FRAGMENT = IMPLICATION_FRAGMENT;
 const LEAGUE_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment LeagueFragment on League {
     __typename
@@ -42643,7 +42697,7 @@ exports.PREDICT_MUTATION = PREDICT_MUTATION;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.MARKET_QUERY = exports.HEAVY_GAMES_QUERY = exports.LIGHT_GAMES_QUERY = exports.GAME_QUERY = void 0;
+exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.PREDICTION_QUERY = exports.MARKET_QUERY = exports.HEAVY_GAMES_QUERY = exports.LIGHT_GAMES_QUERY = exports.GAME_QUERY = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42781,6 +42835,19 @@ const MARKET_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.MARKET_FRAGMENT}
 `;
 exports.MARKET_QUERY = MARKET_QUERY;
+const PREDICTION_QUERY = (0, _graphqlRequest.gql)`
+  query PredictionQuery($predictionId: ID!) {
+    prediction(predictionId: $predictionId) {
+      ...PredictionFragment
+      implications {
+        ...ImplicationFragment
+      }
+    }
+  }
+  ${_fragments.PREDICTION_FRAGMENT}
+  ${_fragments.IMPLICATION_FRAGMENT}
+`;
+exports.PREDICTION_QUERY = PREDICTION_QUERY;
 const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
   query PredictionsQuery($page: Int, $meta: Json) {
     predictions(page: $page, meta: $meta) {
@@ -42978,6 +43045,10 @@ class HotStreak {
 
   fetchMarket(gameId, marketId) {
     return this._api.marketQuery(gameId, marketId);
+  }
+
+  fetchPrediction(predictionId) {
+    return this._api.predictionQuery(predictionId);
   }
 
   fetchPredictions(page = 1, meta) {
