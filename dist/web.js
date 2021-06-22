@@ -42417,10 +42417,30 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = void 0;
+exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = exports.AT_BAT_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
+const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment AtBatFragment on AtBat {
+    __typename
+    balls
+    createdAt
+    hitter {
+      __typename
+      id
+    }
+    id
+    outs
+    pitcher {
+      __typename
+      id
+    }
+    strikes
+    updatedAt
+  }
+`;
+exports.AT_BAT_FRAGMENT = AT_BAT_FRAGMENT;
 const EVENT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment EventFragment on Event {
     __typename
@@ -42561,6 +42581,7 @@ const PARTICIPANT_FRAGMENT = (0, _graphqlRequest.gql)`
       __typename
       id
     }
+    order
     player {
       __typename
       id
@@ -42723,6 +42744,11 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
           }
         }
       }
+      ... on BaseballGame {
+        atBat {
+          ...AtBatFragment
+        }
+      }
       ... on FootballGame {
         situation {
           ...SituationFragment
@@ -42744,6 +42770,7 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
+  ${_fragments.AT_BAT_FRAGMENT}
   ${_fragments.SITUATION_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
@@ -42758,6 +42785,11 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
       }
       opponents {
         ...OpponentFragment
+      }
+      ... on BaseballGame {
+        atBat {
+          ...AtBatFragment
+        }
       }
       ... on FootballGame {
         situation {
@@ -42777,6 +42809,7 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.GAME_FRAGMENT}
   ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
+  ${_fragments.AT_BAT_FRAGMENT}
   ${_fragments.SITUATION_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
@@ -42801,6 +42834,11 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
           }
         }
       }
+      ... on BaseballGame {
+        atBat {
+          ...AtBatFragment
+        }
+      }
       ... on FootballGame {
         situation {
           ...SituationFragment
@@ -42822,6 +42860,7 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
+  ${_fragments.AT_BAT_FRAGMENT}
   ${_fragments.SITUATION_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
