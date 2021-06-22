@@ -1,6 +1,7 @@
 import { gql } from 'graphql-request';
 
 import {
+  AT_BAT_FRAGMENT,
   GAME_FRAGMENT,
   HOLE_FRAGMENT,
   IMPLICATION_FRAGMENT,
@@ -34,6 +35,11 @@ const GAME_QUERY = gql`
           }
         }
       }
+      ... on BaseballGame {
+        atBat {
+          ...AtBatFragment
+        }
+      }
       ... on FootballGame {
         situation {
           ...SituationFragment
@@ -55,6 +61,7 @@ const GAME_QUERY = gql`
   ${OPPONENT_FRAGMENT}
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
+  ${AT_BAT_FRAGMENT}
   ${SITUATION_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
@@ -69,6 +76,11 @@ const LIGHT_GAMES_QUERY = gql`
       }
       opponents {
         ...OpponentFragment
+      }
+      ... on BaseballGame {
+        atBat {
+          ...AtBatFragment
+        }
       }
       ... on FootballGame {
         situation {
@@ -88,6 +100,7 @@ const LIGHT_GAMES_QUERY = gql`
   ${GAME_FRAGMENT}
   ${LEAGUE_FRAGMENT}
   ${OPPONENT_FRAGMENT}
+  ${AT_BAT_FRAGMENT}
   ${SITUATION_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
@@ -112,6 +125,11 @@ const HEAVY_GAMES_QUERY = gql`
           }
         }
       }
+      ... on BaseballGame {
+        atBat {
+          ...AtBatFragment
+        }
+      }
       ... on FootballGame {
         situation {
           ...SituationFragment
@@ -133,6 +151,7 @@ const HEAVY_GAMES_QUERY = gql`
   ${OPPONENT_FRAGMENT}
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
+  ${AT_BAT_FRAGMENT}
   ${SITUATION_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}

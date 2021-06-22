@@ -1,5 +1,25 @@
 import { gql } from 'graphql-request';
 
+const AT_BAT_FRAGMENT = gql`
+  fragment AtBatFragment on AtBat {
+    __typename
+    balls
+    createdAt
+    hitter {
+      __typename
+      id
+    }
+    id
+    outs
+    pitcher {
+      __typename
+      id
+    }
+    strikes
+    updatedAt
+  }
+`;
+
 const EVENT_FRAGMENT = gql`
   fragment EventFragment on Event {
     __typename
@@ -142,6 +162,7 @@ const PARTICIPANT_FRAGMENT = gql`
       __typename
       id
     }
+    order
     player {
       __typename
       id
@@ -233,6 +254,7 @@ const TOURNAMENT_FRAGMENT = gql`
 `;
 
 export {
+  AT_BAT_FRAGMENT,
   GAME_FRAGMENT,
   HOLE_FRAGMENT,
   IMPLICATION_FRAGMENT,
