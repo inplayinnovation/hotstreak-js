@@ -15,6 +15,7 @@ const AT_BAT_FRAGMENT = gql`
       __typename
       id
     }
+    runners
     strikes
     updatedAt
   }

@@ -21,11 +21,8 @@ class HotStreak {
       return;
     }
 
-    const {
-      gamesChannel,
-      pusherAppKey,
-      pusherCluster
-    } = await this._api.systemQuery();
+    const { gamesChannel, pusherAppKey, pusherCluster } =
+      await this._api.systemQuery();
 
     this._gamesChannel = gamesChannel;
     this._pusher = new Pusher(pusherAppKey, {
@@ -130,14 +127,8 @@ class HotStreak {
     };
 
     if (gameUpdate.situation) {
-      const {
-        down,
-        distance,
-        id,
-        location_id,
-        possession_id,
-        yardline
-      } = gameUpdate.situation;
+      const { down, distance, id, location_id, possession_id, yardline } =
+        gameUpdate.situation;
       const situation = {
         __typename: 'Situation',
         id,
@@ -157,9 +148,8 @@ class HotStreak {
     }
 
     const parsedMarkets = Object.keys(markets).map(id => {
-      const [probabilities, lines, durations, affinity] = markets[id].split(
-        '|'
-      );
+      const [probabilities, lines, durations, affinity] =
+        markets[id].split('|');
 
       const market = {
         __typename: 'Market',
