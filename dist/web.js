@@ -42436,6 +42436,7 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
       __typename
       id
     }
+    runners
     strikes
     updatedAt
   }
