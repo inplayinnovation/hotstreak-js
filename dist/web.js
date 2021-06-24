@@ -43122,6 +43122,7 @@ class HotStreak {
       id,
       event,
       lineup,
+      situation,
       scores,
       status,
       timestamp
@@ -43142,7 +43143,23 @@ class HotStreak {
       elapsed,
       period
     } = clocks.game;
-    let atBat;
+    const gameId = `Game:${id}`;
+    const game = {
+      __typename: 'Game',
+      id: gameId,
+      clock,
+      elapsed,
+      event,
+      lineup,
+      opponents: Object.keys(fixedScores).map(id => ({
+        __typename: 'Opponent',
+        id,
+        score: fixedScores[id]
+      })),
+      period,
+      scores: fixedScores,
+      status
+    };
 
     if (at_bat) {
       const {
@@ -43153,7 +43170,7 @@ class HotStreak {
         runners,
         strikes
       } = at_bat;
-      atBat = {
+      game.atBat = {
         __typename: 'AtBat',
         balls,
         hitter: {
@@ -43170,26 +43187,7 @@ class HotStreak {
       };
     }
 
-    const gameId = `Game:${id}`;
-    const game = {
-      __typename: 'Game',
-      id: gameId,
-      atBat,
-      clock,
-      elapsed,
-      event,
-      lineup,
-      opponents: Object.keys(fixedScores).map(id => ({
-        __typename: 'Opponent',
-        id,
-        score: fixedScores[id]
-      })),
-      period,
-      scores: fixedScores,
-      status
-    };
-
-    if (gameUpdate.situation) {
+    if (situation) {
       const {
         down,
         distance,
@@ -43197,8 +43195,8 @@ class HotStreak {
         location_id,
         possession_id,
         yardline
-      } = gameUpdate.situation;
-      const situation = {
+      } = situation;
+      game.situation = {
         __typename: 'Situation',
         id,
         down,
@@ -43213,7 +43211,6 @@ class HotStreak {
         },
         yardline
       };
-      game.situation = situation;
     }
 
     const parsedMarkets = Object.keys(markets).map(id => {
