@@ -4,12 +4,10 @@ const AT_BAT_FRAGMENT = gql`
   fragment AtBatFragment on AtBat {
     __typename
     balls
-    createdAt
     hitter {
       __typename
       id
     }
-    id
     outs
     pitcher {
       __typename
@@ -17,7 +15,6 @@ const AT_BAT_FRAGMENT = gql`
     }
     runners
     strikes
-    updatedAt
   }
 `;
 

@@ -112,7 +112,7 @@ class HotStreak {
 
     let atBat;
     if (at_bat) {
-      const { balls, hitter, id, outs, pitcher, runners, strikes } = at_bat;
+      const { balls, hitter, outs, pitcher, runners, strikes } = at_bat;
       atBat = {
         __typename: 'AtBat',
         balls,
@@ -120,7 +120,6 @@ class HotStreak {
           __typename: 'Participant',
           id: hitter.id
         },
-        id,
         outs,
         pitcher: {
           __typename: 'Participant',
