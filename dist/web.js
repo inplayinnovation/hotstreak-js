@@ -42425,12 +42425,10 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment AtBatFragment on AtBat {
     __typename
     balls
-    createdAt
     hitter {
       __typename
       id
     }
-    id
     outs
     pitcher {
       __typename
@@ -42438,7 +42436,6 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
     }
     runners
     strikes
-    updatedAt
   }
 `;
 exports.AT_BAT_FRAGMENT = AT_BAT_FRAGMENT;
@@ -43151,7 +43148,6 @@ class HotStreak {
       const {
         balls,
         hitter,
-        id,
         outs,
         pitcher,
         runners,
@@ -43164,7 +43160,6 @@ class HotStreak {
           __typename: 'Participant',
           id: hitter.id
         },
-        id,
         outs,
         pitcher: {
           __typename: 'Participant',
