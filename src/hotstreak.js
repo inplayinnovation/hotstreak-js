@@ -94,7 +94,8 @@ class HotStreak {
   }
 
   _handleGameUpdate(gameUpdate, callback) {
-    const { clocks, id, event, scores, status, timestamp } = gameUpdate;
+    const { at_bat, clocks, id, event, lineup, scores, status, timestamp } =
+      gameUpdate;
     const markets = gameUpdate.markets || {};
 
     if (this._lastTimestamp && timestamp < this._lastTimestamp) {
@@ -109,13 +110,36 @@ class HotStreak {
 
     const { clock, elapsed, period } = clocks.game;
 
+    let atBat;
+    if (at_bat) {
+      const { balls, hitter, id, outs, pitcher, runners, strikes } = at_bat;
+      atBat = {
+        __typename: 'AtBat',
+        balls,
+        hitter: {
+          __typename: 'Participant',
+          id: hitter.id
+        },
+        id,
+        outs,
+        pitcher: {
+          __typename: 'Participant',
+          id: pitcher.id
+        },
+        runners,
+        strikes
+      };
+    }
+
     const gameId = `Game:${id}`;
     const game = {
       __typename: 'Game',
       id: gameId,
+      atBat,
       clock,
       elapsed,
       event,
+      lineup,
       opponents: Object.keys(fixedScores).map(id => ({
         __typename: 'Opponent',
         id,
