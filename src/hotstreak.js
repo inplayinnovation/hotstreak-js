@@ -93,12 +93,32 @@ class HotStreak {
     });
   }
 
+  _formatAtBat(atBat) {
+    const { balls, hitter, outs, pitcher, runners, strikes } = atBat;
+    return {
+      __typename: 'AtBat',
+      balls,
+      hitter: {
+        __typename: 'Participant',
+        id: hitter.id
+      },
+      outs,
+      pitcher: {
+        __typename: 'Participant',
+        id: pitcher.id
+      },
+      runners,
+      strikes
+    };
+  }
+
   _handleGameUpdate(gameUpdate, callback) {
     const {
-      at_bat,
       clocks,
       id,
       event,
+      last_away_at_bat,
+      last_home_at_bat,
       lineup,
       situation,
       scores,
@@ -137,23 +157,12 @@ class HotStreak {
       status
     };
 
-    if (at_bat) {
-      const { balls, hitter, outs, pitcher, runners, strikes } = at_bat;
-      game.atBat = {
-        __typename: 'AtBat',
-        balls,
-        hitter: {
-          __typename: 'Participant',
-          id: hitter.id
-        },
-        outs,
-        pitcher: {
-          __typename: 'Participant',
-          id: pitcher.id
-        },
-        runners,
-        strikes
-      };
+    if (last_away_at_bat) {
+      game.lastAwayAtBat = this._formatAtBat(last_away_at_bat);
+    }
+
+    if (last_home_at_bat) {
+      game.lastHomeAtBat = this._formatAtBat(last_home_at_bat);
     }
 
     if (situation) {
