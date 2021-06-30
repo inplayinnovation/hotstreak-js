@@ -43185,7 +43185,6 @@ class HotStreak {
       id: gameId,
       clock,
       elapsed,
-      event,
       lineup,
       opponents: Object.keys(fixedScores).map(id => ({
         __typename: 'Opponent',
@@ -43196,6 +43195,10 @@ class HotStreak {
       scores: fixedScores,
       status
     };
+
+    if (event) {
+      game.event = event;
+    }
 
     if (last_away_at_bat) {
       game.lastAwayAtBat = this._formatAtBat(last_away_at_bat);
