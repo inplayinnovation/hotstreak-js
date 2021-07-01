@@ -42598,6 +42598,7 @@ const PLAYER_FRAGMENT = (0, _graphqlRequest.gql)`
     lastName
     number
     position
+    traits
   }
 `;
 exports.PLAYER_FRAGMENT = PLAYER_FRAGMENT;
@@ -43132,7 +43133,7 @@ class HotStreak {
       hitter,
       order,
       outs,
-      pitchCount,
+      pitch_count: pitchCount,
       pitcher,
       runners,
       strikes
