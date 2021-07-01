@@ -1,7 +1,7 @@
 {
   "name": "hotstreak",
   "description": "Access HotStreak's real-time prediciton feeds",
-  "version": "1.0.39",
+  "version": "1.0.40",
   "main": "index.js",
   "module": "src/hotstreak.js",
   "react-native": "src/hotstreak.js",
