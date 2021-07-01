@@ -94,7 +94,16 @@ class HotStreak {
   }
 
   _formatAtBat(atBat) {
-    const { balls, hitter, outs, pitcher, runners, strikes } = atBat;
+    const {
+      balls,
+      hitter,
+      order,
+      outs,
+      pitchCount,
+      pitcher,
+      runners,
+      strikes
+    } = atBat;
     return {
       __typename: 'AtBat',
       balls,
@@ -102,7 +111,9 @@ class HotStreak {
         __typename: 'Participant',
         id: hitter.id
       },
+      order,
       outs,
+      pitchCount,
       pitcher: {
         __typename: 'Participant',
         id: pitcher.id
