@@ -42429,7 +42429,9 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
       __typename
       id
     }
+    order
     outs
+    pitchCount
     pitcher {
       __typename
       id
@@ -43128,7 +43130,9 @@ class HotStreak {
     const {
       balls,
       hitter,
+      order,
       outs,
+      pitchCount,
       pitcher,
       runners,
       strikes
@@ -43140,7 +43144,9 @@ class HotStreak {
         __typename: 'Participant',
         id: hitter.id
       },
+      order,
       outs,
+      pitchCount,
       pitcher: {
         __typename: 'Participant',
         id: pitcher.id
