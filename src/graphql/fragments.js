@@ -15,6 +15,7 @@ const AT_BAT_FRAGMENT = gql`
       __typename
       id
     }
+    pitcherPitchCount
     runners
     strikes
   }

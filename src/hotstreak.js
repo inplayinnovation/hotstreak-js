@@ -101,6 +101,7 @@ class HotStreak {
       outs,
       pitch_count: pitchCount,
       pitcher,
+      pitcher_pitch_count: pitcherPitchCount,
       runners,
       strikes
     } = atBat;
@@ -118,6 +119,7 @@ class HotStreak {
         __typename: 'Participant',
         id: pitcher.id
       },
+      pitcherPitchCount,
       runners,
       strikes
     };
