@@ -99,7 +99,7 @@ class HotStreak {
       hitter,
       order,
       outs,
-      pitchCount,
+      pitch_count: pitchCount,
       pitcher,
       runners,
       strikes

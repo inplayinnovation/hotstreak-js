@@ -179,6 +179,7 @@ const PLAYER_FRAGMENT = gql`
     lastName
     number
     position
+    traits
   }
 `;
 
