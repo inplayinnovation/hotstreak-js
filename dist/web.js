@@ -42587,6 +42587,7 @@ const PARTICIPANT_FRAGMENT = (0, _graphqlRequest.gql)`
       __typename
       id
     }
+    position
   }
 `;
 exports.PARTICIPANT_FRAGMENT = PARTICIPANT_FRAGMENT;
