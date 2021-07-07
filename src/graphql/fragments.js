@@ -168,6 +168,7 @@ const PARTICIPANT_FRAGMENT = gql`
       __typename
       id
     }
+    position
   }
 `;
 
