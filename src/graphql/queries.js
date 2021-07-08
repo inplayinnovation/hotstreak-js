@@ -39,6 +39,9 @@ const GAME_QUERY = gql`
         atBat {
           ...AtBatFragment
         }
+        lineup
+        pitchCounts
+        runners
       }
       ... on FootballGame {
         situation {
@@ -81,6 +84,9 @@ const LIGHT_GAMES_QUERY = gql`
         atBat {
           ...AtBatFragment
         }
+        lineup
+        pitchCounts
+        runners
       }
       ... on FootballGame {
         situation {
@@ -129,6 +135,9 @@ const HEAVY_GAMES_QUERY = gql`
         atBat {
           ...AtBatFragment
         }
+        lineup
+        pitchCounts
+        runners
       }
       ... on FootballGame {
         situation {

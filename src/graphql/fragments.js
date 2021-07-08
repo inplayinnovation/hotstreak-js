@@ -8,15 +8,11 @@ const AT_BAT_FRAGMENT = gql`
       __typename
       id
     }
-    order
-    outs
     pitchCount
     pitcher {
       __typename
       id
     }
-    pitcherPitchCount
-    runners
     strikes
   }
 `;
