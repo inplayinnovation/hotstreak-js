@@ -42429,15 +42429,11 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
       __typename
       id
     }
-    order
-    outs
     pitchCount
     pitcher {
       __typename
       id
     }
-    pitcherPitchCount
-    runners
     strikes
   }
 `;
@@ -42751,6 +42747,9 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
         atBat {
           ...AtBatFragment
         }
+        lineup
+        pitchCounts
+        runners
       }
       ... on FootballGame {
         situation {
@@ -42793,6 +42792,9 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
         atBat {
           ...AtBatFragment
         }
+        lineup
+        pitchCounts
+        runners
       }
       ... on FootballGame {
         situation {
@@ -42841,6 +42843,9 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
         atBat {
           ...AtBatFragment
         }
+        lineup
+        pitchCounts
+        runners
       }
       ... on FootballGame {
         situation {
@@ -43124,12 +43129,8 @@ class HotStreak {
     const {
       balls,
       hitter,
-      order,
-      outs,
       pitch_count: pitchCount,
       pitcher,
-      pitcher_pitch_count: pitcherPitchCount,
-      runners,
       strikes
     } = atBat;
     return {
@@ -43139,26 +43140,24 @@ class HotStreak {
         __typename: 'Participant',
         id: hitter.id
       },
-      order,
-      outs,
       pitchCount,
       pitcher: {
         __typename: 'Participant',
         id: pitcher.id
       },
-      pitcherPitchCount,
-      runners,
       strikes
     };
   }
 
   _handleGameUpdate(gameUpdate, callback) {
     const {
-      at_bat,
+      at_bat: atBat,
       clocks,
       id,
       event,
       lineup,
+      pitch_counts: pitchCounts,
+      runners,
       situation,
       scores,
       status,
@@ -43200,12 +43199,20 @@ class HotStreak {
       game.event = event;
     }
 
-    if (at_bat) {
-      game.atBat = this._formatAtBat(at_bat);
+    if (atBat) {
+      game.atBat = this._formatAtBat(atBat);
     }
 
     if (lineup) {
       game.lineup = lineup;
+    }
+
+    if (pitchCounts) {
+      game.pitchCounts = pitchCounts;
+    }
+
+    if (runnners) {
+      game.runners = runners;
     }
 
     if (situation) {
