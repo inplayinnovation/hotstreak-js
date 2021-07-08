@@ -43211,7 +43211,7 @@ class HotStreak {
       game.pitchCounts = pitchCounts;
     }
 
-    if (runnners) {
+    if (runners) {
       game.runners = runners;
     }
 
