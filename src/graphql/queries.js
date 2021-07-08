@@ -36,10 +36,7 @@ const GAME_QUERY = gql`
         }
       }
       ... on BaseballGame {
-        lastAwayAtBat {
-          ...AtBatFragment
-        }
-        lastHomeAtBat {
+        atBat {
           ...AtBatFragment
         }
       }
@@ -81,10 +78,7 @@ const LIGHT_GAMES_QUERY = gql`
         ...OpponentFragment
       }
       ... on BaseballGame {
-        lastAwayAtBat {
-          ...AtBatFragment
-        }
-        lastHomeAtBat {
+        atBat {
           ...AtBatFragment
         }
       }
@@ -132,10 +126,7 @@ const HEAVY_GAMES_QUERY = gql`
         }
       }
       ... on BaseballGame {
-        lastAwayAtBat {
-          ...AtBatFragment
-        }
-        lastHomeAtBat {
+        atBat {
           ...AtBatFragment
         }
       }

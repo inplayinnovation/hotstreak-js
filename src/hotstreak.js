@@ -127,11 +127,10 @@ class HotStreak {
 
   _handleGameUpdate(gameUpdate, callback) {
     const {
+      at_bat,
       clocks,
       id,
       event,
-      last_away_at_bat,
-      last_home_at_bat,
       lineup,
       situation,
       scores,
@@ -172,12 +171,8 @@ class HotStreak {
       game.event = event;
     }
 
-    if (last_away_at_bat) {
-      game.lastAwayAtBat = this._formatAtBat(last_away_at_bat);
-    }
-
-    if (last_home_at_bat) {
-      game.lastHomeAtBat = this._formatAtBat(last_home_at_bat);
+    if (at_bat) {
+      game.atBat = this._formatAtBat(at_bat);
     }
 
     if (lineup) {
