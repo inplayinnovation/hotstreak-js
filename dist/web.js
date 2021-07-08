@@ -42748,10 +42748,7 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
         }
       }
       ... on BaseballGame {
-        lastAwayAtBat {
-          ...AtBatFragment
-        }
-        lastHomeAtBat {
+        atBat {
           ...AtBatFragment
         }
       }
@@ -42793,10 +42790,7 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
         ...OpponentFragment
       }
       ... on BaseballGame {
-        lastAwayAtBat {
-          ...AtBatFragment
-        }
-        lastHomeAtBat {
+        atBat {
           ...AtBatFragment
         }
       }
@@ -42844,10 +42838,7 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
         }
       }
       ... on BaseballGame {
-        lastAwayAtBat {
-          ...AtBatFragment
-        }
-        lastHomeAtBat {
+        atBat {
           ...AtBatFragment
         }
       }
@@ -43163,11 +43154,10 @@ class HotStreak {
 
   _handleGameUpdate(gameUpdate, callback) {
     const {
+      at_bat,
       clocks,
       id,
       event,
-      last_away_at_bat,
-      last_home_at_bat,
       lineup,
       situation,
       scores,
@@ -43210,12 +43200,8 @@ class HotStreak {
       game.event = event;
     }
 
-    if (last_away_at_bat) {
-      game.lastAwayAtBat = this._formatAtBat(last_away_at_bat);
-    }
-
-    if (last_home_at_bat) {
-      game.lastHomeAtBat = this._formatAtBat(last_home_at_bat);
+    if (at_bat) {
+      game.atBat = this._formatAtBat(at_bat);
     }
 
     if (lineup) {
