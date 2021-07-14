@@ -13,6 +13,7 @@ import {
   PREDICTION_FRAGMENT,
   SCORECARD_FRAGMENT,
   SITUATION_FRAGMENT,
+  STATISTIC_FRAGMENT,
   TOURNAMENT_FRAGMENT
 } from './fragments';
 
@@ -181,11 +182,18 @@ const PREDICTION_QUERY = gql`
       ...PredictionFragment
       implications {
         ...ImplicationFragment
+        statistic {
+          ...StatisticFragment
+          implications {
+            ...ImplicationFragment
+          }
+        }
       }
     }
   }
   ${PREDICTION_FRAGMENT}
   ${IMPLICATION_FRAGMENT}
+  ${STATISTIC_FRAGMENT}
 `;
 
 const PREDICTIONS_QUERY = gql`

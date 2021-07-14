@@ -92,12 +92,8 @@ const IMPLICATION_FRAGMENT = gql`
     createdAt
     delta
     id
-    statistic {
-      ...StatisticFragment
-    }
     updatedAt
   }
-  ${STATISTIC_FRAGMENT}
 `;
 
 const LEAGUE_FRAGMENT = gql`
@@ -265,6 +261,7 @@ export {
   PLAYER_FRAGMENT,
   SCORECARD_FRAGMENT,
   SITUATION_FRAGMENT,
+  STATISTIC_FRAGMENT,
   TEAM_FRAGMENT,
   TOURNAMENT_FRAGMENT
 };
