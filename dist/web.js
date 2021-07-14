@@ -42417,7 +42417,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = exports.AT_BAT_FRAGMENT = void 0;
+exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.STATISTIC_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = exports.AT_BAT_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42504,6 +42504,7 @@ const STATISTIC_FRAGMENT = (0, _graphqlRequest.gql)`
   }
   ${EVENT_FRAGMENT}
 `;
+exports.STATISTIC_FRAGMENT = STATISTIC_FRAGMENT;
 const IMPLICATION_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment ImplicationFragment on Implication {
     __typename
@@ -42511,12 +42512,8 @@ const IMPLICATION_FRAGMENT = (0, _graphqlRequest.gql)`
     createdAt
     delta
     id
-    statistic {
-      ...StatisticFragment
-    }
     updatedAt
   }
-  ${STATISTIC_FRAGMENT}
 `;
 exports.IMPLICATION_FRAGMENT = IMPLICATION_FRAGMENT;
 const LEAGUE_FRAGMENT = (0, _graphqlRequest.gql)`
@@ -42889,11 +42886,18 @@ const PREDICTION_QUERY = (0, _graphqlRequest.gql)`
       ...PredictionFragment
       implications {
         ...ImplicationFragment
+        statistic {
+          ...StatisticFragment
+          implications {
+            ...ImplicationFragment
+          }
+        }
       }
     }
   }
   ${_fragments.PREDICTION_FRAGMENT}
   ${_fragments.IMPLICATION_FRAGMENT}
+  ${_fragments.STATISTIC_FRAGMENT}
 `;
 exports.PREDICTION_QUERY = PREDICTION_QUERY;
 const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
