@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 
 import {
   GAME_QUERY,
+  LEAGUES_QUERY,
   LIGHT_GAMES_QUERY,
   HEAVY_GAMES_QUERY,
   MARKET_QUERY,
@@ -50,6 +51,11 @@ class API {
       });
     });
     return games;
+  }
+
+  async leaguesQuery() {
+    const { leagues } = await this._graphQLClient.request(LEAGUES_QUERY);
+    return leagues;
   }
 
   async marketQuery(gameId, marketId) {

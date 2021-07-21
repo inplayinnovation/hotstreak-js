@@ -71,6 +71,15 @@ const GAME_QUERY = gql`
   ${HOLE_FRAGMENT}
 `;
 
+const LEAGUES_QUERY = gql`
+  query LeaguesQuery {
+    leagues {
+      ...LeagueFragment
+    }
+  }
+  ${LEAGUE_FRAGMENT}
+`;
+
 const LIGHT_GAMES_QUERY = gql`
   query LightGamesQuery {
     games {
@@ -263,6 +272,7 @@ const SYSTEM_QUERY = gql`
 
 export {
   GAME_QUERY,
+  LEAGUES_QUERY,
   LIGHT_GAMES_QUERY,
   HEAVY_GAMES_QUERY,
   MARKET_QUERY,
