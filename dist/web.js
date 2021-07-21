@@ -42304,14 +42304,8 @@ class API {
     });
   }
 
-  async gameQuery(id) {
-    const variables = {
-      id
-    };
-    const {
-      game
-    } = await this._graphQLClient.request(_queries.GAME_QUERY, variables);
-    game.markets.forEach(market => {
+  _fixGame(game) {
+    (game.markets || []).forEach(market => {
       Object.assign(market, (0, _helpers.marketIdToJson)(market.id));
       market.game = {
         __typename: 'Game',
@@ -42321,6 +42315,18 @@ class API {
     game.opponents.forEach(opponent => {
       opponent.score = game.scores[opponent.id];
     });
+  }
+
+  async gameQuery(id) {
+    const variables = {
+      id
+    };
+    const {
+      game
+    } = await this._graphQLClient.request(_queries.GAME_QUERY, variables);
+
+    this._fixGame(game);
+
     return game;
   }
 
@@ -42332,19 +42338,26 @@ class API {
     const {
       games
     } = await this._graphQLClient.request(query, variables);
-    games.forEach(game => {
-      (game.markets || []).forEach(market => {
-        Object.assign(market, (0, _helpers.marketIdToJson)(market.id));
-        market.game = {
-          __typename: 'Game',
-          id: game.id
-        };
-      });
-      game.opponents.forEach(opponent => {
-        opponent.score = game.scores[opponent.id];
-      });
-    });
+    games.forEach(this._fixGame);
     return games;
+  }
+
+  async leagueQuery(id) {
+    const variables = {
+      id
+    };
+    const {
+      league
+    } = await this._graphQLClient.request(_queries.LEAGUE_QUERY, variables);
+    league.games.forEach(this._fixGame);
+    return league;
+  }
+
+  async leaguesQuery() {
+    const {
+      leagues
+    } = await this._graphQLClient.request(_queries.LEAGUES_QUERY);
+    return leagues;
   }
 
   async marketQuery(gameId, marketId) {
@@ -42715,7 +42728,7 @@ exports.PREDICT_MUTATION = PREDICT_MUTATION;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.PREDICTION_QUERY = exports.MARKET_QUERY = exports.HEAVY_GAMES_QUERY = exports.LIGHT_GAMES_QUERY = exports.GAME_QUERY = void 0;
+exports.SYSTEM_QUERY = exports.PREDICTIONS_QUERY = exports.PREDICTION_QUERY = exports.MARKET_QUERY = exports.HEAVY_GAMES_QUERY = exports.LIGHT_GAMES_QUERY = exports.LEAGUES_QUERY = exports.LEAGUE_QUERY = exports.GAME_QUERY = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -42775,6 +42788,73 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.HOLE_FRAGMENT}
 `;
 exports.GAME_QUERY = GAME_QUERY;
+const LEAGUE_QUERY = (0, _graphqlRequest.gql)`
+  query LeagueQuery($id: ID!) {
+    league(id: $id) {
+      ...LeagueFragment
+      games {
+        ...GameFragment
+        league {
+          __typename
+          id
+        }
+        markets {
+          ...MarketFragment
+        }
+        opponents {
+          ...OpponentFragment
+          participants {
+            ...ParticipantFragment
+            player {
+              ...PlayerFragment
+            }
+          }
+        }
+        ... on BaseballGame {
+          atBat {
+            ...AtBatFragment
+          }
+          lineup
+          pitchCounts
+          runners
+        }
+        ... on FootballGame {
+          situation {
+            ...SituationFragment
+          }
+        }
+        ... on GolfGame {
+          tournament {
+            ...TournamentFragment
+            holes {
+              ...HoleFragment
+            }
+          }
+        }
+      }
+    }
+  }
+  ${_fragments.LEAGUE_FRAGMENT}
+  ${_fragments.GAME_FRAGMENT}
+  ${_fragments.MARKET_FRAGMENT}
+  ${_fragments.OPPONENT_FRAGMENT}
+  ${_fragments.PARTICIPANT_FRAGMENT}
+  ${_fragments.PLAYER_FRAGMENT}
+  ${_fragments.AT_BAT_FRAGMENT}
+  ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.TOURNAMENT_FRAGMENT}
+  ${_fragments.HOLE_FRAGMENT}
+`;
+exports.LEAGUE_QUERY = LEAGUE_QUERY;
+const LEAGUES_QUERY = (0, _graphqlRequest.gql)`
+  query LeaguesQuery {
+    leagues {
+      ...LeagueFragment
+    }
+  }
+  ${_fragments.LEAGUE_FRAGMENT}
+`;
+exports.LEAGUES_QUERY = LEAGUES_QUERY;
 const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
   query LightGamesQuery {
     games {
@@ -43093,6 +43173,14 @@ class HotStreak {
 
   fetchGames(status) {
     return this._api.gamesQuery(status);
+  }
+
+  fetchLeague(id) {
+    return this._api.leagueQuery(id);
+  }
+
+  fetchLeagues() {
+    return this._api.leaguesQuery();
   }
 
   fetchMarket(gameId, marketId) {
