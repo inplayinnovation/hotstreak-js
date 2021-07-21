@@ -71,6 +71,64 @@ const GAME_QUERY = gql`
   ${HOLE_FRAGMENT}
 `;
 
+const LEAGUE_QUERY = gql`
+  query LeagueQuery($id: ID!) {
+    league(id: $id) {
+      ...LeagueFragment
+      games {
+        ...GameFragment
+        league {
+          __typename
+          id
+        }
+        markets {
+          ...MarketFragment
+        }
+        opponents {
+          ...OpponentFragment
+          participants {
+            ...ParticipantFragment
+            player {
+              ...PlayerFragment
+            }
+          }
+        }
+        ... on BaseballGame {
+          atBat {
+            ...AtBatFragment
+          }
+          lineup
+          pitchCounts
+          runners
+        }
+        ... on FootballGame {
+          situation {
+            ...SituationFragment
+          }
+        }
+        ... on GolfGame {
+          tournament {
+            ...TournamentFragment
+            holes {
+              ...HoleFragment
+            }
+          }
+        }
+      }
+    }
+  }
+  ${LEAGUE_FRAGMENT}
+  ${GAME_FRAGMENT}
+  ${MARKET_FRAGMENT}
+  ${OPPONENT_FRAGMENT}
+  ${PARTICIPANT_FRAGMENT}
+  ${PLAYER_FRAGMENT}
+  ${AT_BAT_FRAGMENT}
+  ${SITUATION_FRAGMENT}
+  ${TOURNAMENT_FRAGMENT}
+  ${HOLE_FRAGMENT}
+`;
+
 const LEAGUES_QUERY = gql`
   query LeaguesQuery {
     leagues {
@@ -272,6 +330,7 @@ const SYSTEM_QUERY = gql`
 
 export {
   GAME_QUERY,
+  LEAGUE_QUERY,
   LEAGUES_QUERY,
   LIGHT_GAMES_QUERY,
   HEAVY_GAMES_QUERY,

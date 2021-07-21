@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 
 import {
   GAME_QUERY,
+  LEAGUE_QUERY,
   LEAGUES_QUERY,
   LIGHT_GAMES_QUERY,
   HEAVY_GAMES_QUERY,
@@ -18,10 +19,8 @@ class API {
     this._graphQLClient = new GraphQLClient(baseUrl + '/graphql', { headers });
   }
 
-  async gameQuery(id) {
-    const variables = { id };
-    const { game } = await this._graphQLClient.request(GAME_QUERY, variables);
-    game.markets.forEach(market => {
+  _fixGame(game) {
+    (game.markets || []).forEach(market => {
       Object.assign(market, marketIdToJson(market.id));
       market.game = {
         __typename: 'Game',
@@ -31,6 +30,12 @@ class API {
     game.opponents.forEach(opponent => {
       opponent.score = game.scores[opponent.id];
     });
+  }
+
+  async gameQuery(id) {
+    const variables = { id };
+    const { game } = await this._graphQLClient.request(GAME_QUERY, variables);
+    this._fixGame(game);
     return game;
   }
 
@@ -38,19 +43,18 @@ class API {
     const query = status ? HEAVY_GAMES_QUERY : LIGHT_GAMES_QUERY;
     const variables = status ? { status } : null;
     const { games } = await this._graphQLClient.request(query, variables);
-    games.forEach(game => {
-      (game.markets || []).forEach(market => {
-        Object.assign(market, marketIdToJson(market.id));
-        market.game = {
-          __typename: 'Game',
-          id: game.id
-        };
-      });
-      game.opponents.forEach(opponent => {
-        opponent.score = game.scores[opponent.id];
-      });
-    });
+    games.forEach(this._fixGame);
     return games;
+  }
+
+  async leagueQuery(id) {
+    const variables = { id };
+    const { league } = await this._graphQLClient.request(
+      LEAGUE_QUERY,
+      variables
+    );
+    league.games.forEach(this._fixGame);
+    return league;
   }
 
   async leaguesQuery() {
