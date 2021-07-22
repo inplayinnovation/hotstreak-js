@@ -51585,7 +51585,14 @@ class HotStreak {
     return this._api.predictionsQuery(page, JSON.stringify(meta));
   }
 
-  _decompress(data) {
+  _decompressIfNeeded({
+    data,
+    format
+  }) {
+    if (format === 'json') {
+      return JSON.parse(data);
+    }
+
     return JSON.parse(_pako.default.inflate(_jsBase.Base64.atob(data).split('').map(e => e.charCodeAt(0)), {
       to: 'string'
     }));
@@ -51596,8 +51603,8 @@ class HotStreak {
 
     const channel = this._pusher.subscribe(game.broadcastChannel);
 
-    channel.bind('update', data => {
-      const gameUpdate = this._decompress(data);
+    channel.bind('update', payload => {
+      const gameUpdate = this._decompressIfNeeded(payload);
 
       this._handleGameUpdate(gameUpdate, callback);
     });
@@ -51608,10 +51615,10 @@ class HotStreak {
 
     const channel = this._pusher.subscribe(this._gamesChannel);
 
-    channel.bind('update_batch', data => {
+    channel.bind('update_batch', payload => {
       const {
         batch
-      } = this._decompress(data);
+      } = this._decompressIfNeeded(payload);
 
       batch.forEach(gameUpdate => this._handleGameUpdate(gameUpdate, callback));
     });
