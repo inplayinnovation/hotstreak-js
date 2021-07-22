@@ -1,6 +1,8 @@
 import API from './graphql/api';
+import { Base64 } from 'js-base64';
 import JWT from './jwt';
 import { marketIdToJson } from './helpers';
+import pako from 'pako';
 import Pusher from 'pusher-js';
 
 class HotStreak {
@@ -85,10 +87,22 @@ class HotStreak {
     return this._api.predictionsQuery(page, JSON.stringify(meta));
   }
 
+  _decompress(data) {
+    return JSON.parse(
+      pako.inflate(
+        Base64.atob(data)
+          .split('')
+          .map(e => e.charCodeAt(0)),
+        { to: 'string' }
+      )
+    );
+  }
+
   async subscribeToGame(game, callback) {
     await this._initializePusherClient();
     const channel = this._pusher.subscribe(game.broadcastChannel);
-    channel.bind('update', gameUpdate => {
+    channel.bind('update', data => {
+      const gameUpdate = this._decompress(data);
       this._handleGameUpdate(gameUpdate, callback);
     });
   }
@@ -96,7 +110,8 @@ class HotStreak {
   async subscribeToAllGames(callback) {
     await this._initializePusherClient();
     const channel = this._pusher.subscribe(this._gamesChannel);
-    channel.bind('update_batch', ({ batch }) => {
+    channel.bind('update_batch', data => {
+      const { batch } = this._decompress(data);
       batch.forEach(gameUpdate => this._handleGameUpdate(gameUpdate, callback));
     });
   }
