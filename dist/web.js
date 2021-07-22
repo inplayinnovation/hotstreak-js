@@ -42850,6 +42850,10 @@ const LEAGUES_QUERY = (0, _graphqlRequest.gql)`
   query LeaguesQuery {
     leagues {
       ...LeagueFragment
+      games {
+        __typename
+        id
+      }
     }
   }
   ${_fragments.LEAGUE_FRAGMENT}
