@@ -134,12 +134,19 @@ const LEAGUES_QUERY = gql`
     leagues {
       ...LeagueFragment
       games {
-        __typename
-        id
+        ...GameFragment
+        opponents {
+          ...OpponentFragment
+        }
+        ... on BaseballGame {
+          runners
+        }
       }
     }
   }
   ${LEAGUE_FRAGMENT}
+  ${GAME_FRAGMENT}
+  ${OPPONENT_FRAGMENT}
 `;
 
 const LIGHT_GAMES_QUERY = gql`
