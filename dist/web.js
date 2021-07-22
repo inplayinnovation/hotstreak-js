@@ -51233,12 +51233,19 @@ const LEAGUES_QUERY = (0, _graphqlRequest.gql)`
     leagues {
       ...LeagueFragment
       games {
-        __typename
-        id
+        ...GameFragment
+        opponents {
+          ...OpponentFragment
+        }
+        ... on BaseballGame {
+          runners
+        }
       }
     }
   }
   ${_fragments.LEAGUE_FRAGMENT}
+  ${_fragments.GAME_FRAGMENT}
+  ${_fragments.OPPONENT_FRAGMENT}
 `;
 exports.LEAGUES_QUERY = LEAGUES_QUERY;
 const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
