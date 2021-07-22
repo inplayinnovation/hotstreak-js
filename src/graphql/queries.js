@@ -133,6 +133,10 @@ const LEAGUES_QUERY = gql`
   query LeaguesQuery {
     leagues {
       ...LeagueFragment
+      games {
+        __typename
+        id
+      }
     }
   }
   ${LEAGUE_FRAGMENT}
