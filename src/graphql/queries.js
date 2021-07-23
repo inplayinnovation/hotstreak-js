@@ -139,6 +139,11 @@ const LEAGUES_QUERY = gql`
           ...OpponentFragment
         }
         ... on BaseballGame {
+          atBat {
+            ...AtBatFragment
+          }
+          lineup
+          pitchCounts
           runners
         }
       }
@@ -147,6 +152,7 @@ const LEAGUES_QUERY = gql`
   ${LEAGUE_FRAGMENT}
   ${GAME_FRAGMENT}
   ${OPPONENT_FRAGMENT}
+  ${AT_BAT_FRAGMENT}
 `;
 
 const LIGHT_GAMES_QUERY = gql`

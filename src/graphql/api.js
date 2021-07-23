@@ -59,6 +59,7 @@ class API {
 
   async leaguesQuery() {
     const { leagues } = await this._graphQLClient.request(LEAGUES_QUERY);
+    leagues.forEach(league => league.games.forEach(this._fixGame));
     return leagues;
   }
 
