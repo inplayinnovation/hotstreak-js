@@ -237,7 +237,7 @@ class HotStreak {
           id: gameId
         },
         lines: lines.split(',').map(parseFloat),
-        options,
+        options: parseInt(options),
         probabilities: probabilities.split(',').map(parseFloat)
       };
 
