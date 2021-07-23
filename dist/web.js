@@ -51612,8 +51612,11 @@ class HotStreak {
     }));
   }
 
-  async _subscribeToGameUpdates(broadcastChannel, callback) {
+  async subscribe(gameOrLeague, callback) {
     await this._initializePusherClient();
+    const {
+      broadcastChannel
+    } = gameOrLeague;
 
     const channel = this._pusher.subscribe(broadcastChannel);
 
@@ -51622,14 +51625,6 @@ class HotStreak {
 
       this._handleGameUpdate(gameUpdate, callback);
     });
-  }
-
-  subscribeToGame(game, callback) {
-    this._subscribeToGameUpdates(game.broadcastChannel, callback);
-  }
-
-  async subscribeToLeague(league, callback) {
-    this._subscribeToGameUpdates(league.broadcastChannel, callback);
   }
 
   async subscribeToAllGames(callback) {
