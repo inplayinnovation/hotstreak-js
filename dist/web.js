@@ -50933,6 +50933,7 @@ const MARKET_FRAGMENT = (0, _graphqlRequest.gql)`
     durations
     id
     lines
+    options
     probabilities
   }
 `;
@@ -51758,7 +51759,7 @@ class HotStreak {
     }
 
     const parsedMarkets = Object.keys(markets).map(id => {
-      const [probabilities, lines, durations, affinity] = markets[id].split('|');
+      const [probabilities, lines, durations, affinity, options] = markets[id].split('|');
       const market = {
         __typename: 'Market',
         id,
@@ -51769,6 +51770,7 @@ class HotStreak {
           id: gameId
         },
         lines: lines.split(',').map(parseFloat),
+        options,
         probabilities: probabilities.split(',').map(parseFloat)
       };
       Object.assign(market, (0, _helpers.marketIdToJson)(id));
