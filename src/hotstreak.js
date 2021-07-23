@@ -224,7 +224,7 @@ class HotStreak {
     }
 
     const parsedMarkets = Object.keys(markets).map(id => {
-      const [probabilities, lines, durations, affinity] =
+      const [probabilities, lines, durations, affinity, options] =
         markets[id].split('|');
 
       const market = {
@@ -237,6 +237,7 @@ class HotStreak {
           id: gameId
         },
         lines: lines.split(',').map(parseFloat),
+        options,
         probabilities: probabilities.split(',').map(parseFloat)
       };
 

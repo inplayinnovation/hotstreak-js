@@ -117,6 +117,7 @@ const MARKET_FRAGMENT = gql`
     durations
     id
     lines
+    options
     probabilities
   }
 `;
