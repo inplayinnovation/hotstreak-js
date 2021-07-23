@@ -50739,6 +50739,7 @@ class API {
     const {
       leagues
     } = await this._graphQLClient.request(_queries.LEAGUES_QUERY);
+    leagues.forEach(league => league.games.forEach(this._fixGame));
     return leagues;
   }
 
@@ -51238,6 +51239,11 @@ const LEAGUES_QUERY = (0, _graphqlRequest.gql)`
           ...OpponentFragment
         }
         ... on BaseballGame {
+          atBat {
+            ...AtBatFragment
+          }
+          lineup
+          pitchCounts
           runners
         }
       }
@@ -51246,6 +51252,7 @@ const LEAGUES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.GAME_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
+  ${_fragments.AT_BAT_FRAGMENT}
 `;
 exports.LEAGUES_QUERY = LEAGUES_QUERY;
 const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
