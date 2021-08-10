@@ -250,7 +250,9 @@ class HotStreak {
   }
 
   unsubscribeFromChannel(channelName) {
-    this._pusher.unsubscribe(channelName);
+    if (this._pusher) {
+      this._pusher.unsubscribe(channelName);
+    }
   }
 }
 
