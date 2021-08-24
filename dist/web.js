@@ -51613,11 +51613,11 @@ class HotStreak {
     }));
   }
 
-  async subscribe(gameOrLeague, callback) {
+  async subscribeToGame(game, callback) {
     await this._initializePusherClient();
     const {
       broadcastChannel
-    } = gameOrLeague;
+    } = game;
 
     const channel = this._pusher.subscribe(broadcastChannel);
 
@@ -51628,10 +51628,13 @@ class HotStreak {
     });
   }
 
-  async subscribeToAllGames(callback) {
+  async subscribeToLeague(league, callback) {
     await this._initializePusherClient();
+    const {
+      broadcastChannel
+    } = league;
 
-    const channel = this._pusher.subscribe(this._gamesChannel);
+    const channel = this._pusher.subscribe(broadcastChannel);
 
     channel.bind('update_batch', payload => {
       const {
