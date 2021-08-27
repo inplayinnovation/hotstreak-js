@@ -17,6 +17,38 @@ const AT_BAT_FRAGMENT = gql`
   }
 `;
 
+const PLAY_FRAGMENT = gql`
+  fragment PlayFragment on Play {
+    createdAt
+    distance
+    down
+    id
+    location {
+      __typename
+      id
+    }
+    updatedAt
+    yardLine
+  }
+`;
+
+const DRIVE_FRAGMENT = gql`
+  fragment DriveFragment on Drive {
+    __typename
+    createdAt
+    currentPlay {
+      ...PlayFragment
+    }
+    id
+    possession {
+      __typename
+      id
+    }
+    updatedAt
+  }
+  ${PLAY_FRAGMENT}
+`;
+
 const EVENT_FRAGMENT = gql`
   fragment EventFragment on Event {
     __typename
@@ -221,24 +253,6 @@ const SCORECARD_FRAGMENT = gql`
   }
 `;
 
-const SITUATION_FRAGMENT = gql`
-  fragment SituationFragment on Situation {
-    __typename
-    distance
-    down
-    id
-    location {
-      __typename
-      id
-    }
-    possession {
-      __typename
-      id
-    }
-    yardline
-  }
-`;
-
 const TOURNAMENT_FRAGMENT = gql`
   fragment TournamentFragment on Tournament {
     __typename
@@ -251,6 +265,7 @@ const TOURNAMENT_FRAGMENT = gql`
 
 export {
   AT_BAT_FRAGMENT,
+  DRIVE_FRAGMENT,
   GAME_FRAGMENT,
   HOLE_FRAGMENT,
   IMPLICATION_FRAGMENT,
@@ -261,7 +276,6 @@ export {
   PREDICTION_FRAGMENT,
   PLAYER_FRAGMENT,
   SCORECARD_FRAGMENT,
-  SITUATION_FRAGMENT,
   STATISTIC_FRAGMENT,
   TEAM_FRAGMENT,
   TOURNAMENT_FRAGMENT

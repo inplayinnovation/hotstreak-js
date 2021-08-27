@@ -2,6 +2,7 @@ import { gql } from 'graphql-request';
 
 import {
   AT_BAT_FRAGMENT,
+  DRIVE_FRAGMENT,
   GAME_FRAGMENT,
   HOLE_FRAGMENT,
   IMPLICATION_FRAGMENT,
@@ -12,7 +13,6 @@ import {
   PLAYER_FRAGMENT,
   PREDICTION_FRAGMENT,
   SCORECARD_FRAGMENT,
-  SITUATION_FRAGMENT,
   STATISTIC_FRAGMENT,
   TOURNAMENT_FRAGMENT
 } from './fragments';
@@ -45,8 +45,8 @@ const GAME_QUERY = gql`
         runners
       }
       ... on FootballGame {
-        situation {
-          ...SituationFragment
+        currentDrive {
+          ...DriveFragment
         }
       }
       ... on GolfGame {
@@ -66,7 +66,7 @@ const GAME_QUERY = gql`
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
   ${AT_BAT_FRAGMENT}
-  ${SITUATION_FRAGMENT}
+  ${DRIVE_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
 `;
@@ -102,8 +102,8 @@ const LEAGUE_QUERY = gql`
           runners
         }
         ... on FootballGame {
-          situation {
-            ...SituationFragment
+          currentDrive {
+            ...DriveFragment
           }
         }
         ... on GolfGame {
@@ -124,7 +124,7 @@ const LEAGUE_QUERY = gql`
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
   ${AT_BAT_FRAGMENT}
-  ${SITUATION_FRAGMENT}
+  ${DRIVE_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
 `;
@@ -174,8 +174,8 @@ const LIGHT_GAMES_QUERY = gql`
         runners
       }
       ... on FootballGame {
-        situation {
-          ...SituationFragment
+        currentDrive {
+          ...DriveFragment
         }
       }
       ... on GolfGame {
@@ -192,7 +192,7 @@ const LIGHT_GAMES_QUERY = gql`
   ${LEAGUE_FRAGMENT}
   ${OPPONENT_FRAGMENT}
   ${AT_BAT_FRAGMENT}
-  ${SITUATION_FRAGMENT}
+  ${DRIVE_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
 `;
@@ -225,8 +225,8 @@ const HEAVY_GAMES_QUERY = gql`
         runners
       }
       ... on FootballGame {
-        situation {
-          ...SituationFragment
+        currentDrive {
+          ...DriveFragment
         }
       }
       ... on GolfGame {
@@ -246,7 +246,7 @@ const HEAVY_GAMES_QUERY = gql`
   ${PARTICIPANT_FRAGMENT}
   ${PLAYER_FRAGMENT}
   ${AT_BAT_FRAGMENT}
-  ${SITUATION_FRAGMENT}
+  ${DRIVE_FRAGMENT}
   ${TOURNAMENT_FRAGMENT}
   ${HOLE_FRAGMENT}
 `;

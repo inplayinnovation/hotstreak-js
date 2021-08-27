@@ -144,12 +144,12 @@ class HotStreak {
     const {
       at_bat: atBat,
       clocks,
+      current_drive: currentDrive,
       id,
       event,
       lineup,
       pitch_counts: pitchCounts,
       runners,
-      situation,
       scores,
       status,
       timestamp
@@ -204,24 +204,37 @@ class HotStreak {
       game.runners = runners;
     }
 
-    if (situation) {
-      const { down, distance, id, location_id, possession_id, yardline } =
-        situation;
-      game.situation = {
-        __typename: 'Situation',
+    if (currentDrive) {
+      const { current_play: currentPlay, id, possession } = currentDrive;
+      game.currentDrive = {
+        __typename: 'Drive',
         id,
-        down,
-        distance,
-        location: {
-          __typename: 'Opponent',
-          id: location_id
-        },
         possession: {
           __typename: 'Opponent',
-          id: possession_id
-        },
-        yardline
+          id: possession.id
+        }
       };
+
+      if (currentPlay) {
+        const {
+          id,
+          down,
+          distance,
+          yard_line: yardLine,
+          location
+        } = currentPlay;
+        game.currentDrive.currentPlay = {
+          __typename: 'Play',
+          id,
+          down,
+          distance,
+          location: {
+            __typename: 'Opponent',
+            id: location.id
+          },
+          yardLine
+        };
+      }
     }
 
     const parsedMarkets = Object.keys(markets).map(id => {
