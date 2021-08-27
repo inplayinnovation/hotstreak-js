@@ -50836,6 +50836,7 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
 exports.AT_BAT_FRAGMENT = AT_BAT_FRAGMENT;
 const PLAY_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment PlayFragment on Play {
+    __typename
     createdAt
     distance
     down
