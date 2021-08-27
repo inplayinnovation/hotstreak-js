@@ -50813,7 +50813,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.STATISTIC_FRAGMENT = exports.SITUATION_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = exports.AT_BAT_FRAGMENT = void 0;
+exports.TOURNAMENT_FRAGMENT = exports.TEAM_FRAGMENT = exports.STATISTIC_FRAGMENT = exports.SCORECARD_FRAGMENT = exports.PLAYER_FRAGMENT = exports.PREDICTION_FRAGMENT = exports.PARTICIPANT_FRAGMENT = exports.OPPONENT_FRAGMENT = exports.MARKET_FRAGMENT = exports.LEAGUE_FRAGMENT = exports.IMPLICATION_FRAGMENT = exports.HOLE_FRAGMENT = exports.GAME_FRAGMENT = exports.DRIVE_FRAGMENT = exports.AT_BAT_FRAGMENT = void 0;
 
 var _graphqlRequest = require("graphql-request");
 
@@ -50834,6 +50834,37 @@ const AT_BAT_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.AT_BAT_FRAGMENT = AT_BAT_FRAGMENT;
+const PLAY_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment PlayFragment on Play {
+    createdAt
+    distance
+    down
+    id
+    location {
+      __typename
+      id
+    }
+    updatedAt
+    yardLine
+  }
+`;
+const DRIVE_FRAGMENT = (0, _graphqlRequest.gql)`
+  fragment DriveFragment on Drive {
+    __typename
+    createdAt
+    currentPlay {
+      ...PlayFragment
+    }
+    id
+    possession {
+      __typename
+      id
+    }
+    updatedAt
+  }
+  ${PLAY_FRAGMENT}
+`;
+exports.DRIVE_FRAGMENT = DRIVE_FRAGMENT;
 const EVENT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment EventFragment on Event {
     __typename
@@ -51037,24 +51068,6 @@ const SCORECARD_FRAGMENT = (0, _graphqlRequest.gql)`
   }
 `;
 exports.SCORECARD_FRAGMENT = SCORECARD_FRAGMENT;
-const SITUATION_FRAGMENT = (0, _graphqlRequest.gql)`
-  fragment SituationFragment on Situation {
-    __typename
-    distance
-    down
-    id
-    location {
-      __typename
-      id
-    }
-    possession {
-      __typename
-      id
-    }
-    yardline
-  }
-`;
-exports.SITUATION_FRAGMENT = SITUATION_FRAGMENT;
 const TOURNAMENT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment TournamentFragment on Tournament {
     __typename
@@ -51146,8 +51159,8 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
         runners
       }
       ... on FootballGame {
-        situation {
-          ...SituationFragment
+        currentDrive {
+          ...DriveFragment
         }
       }
       ... on GolfGame {
@@ -51167,7 +51180,7 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
   ${_fragments.AT_BAT_FRAGMENT}
-  ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.DRIVE_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
 `;
@@ -51203,8 +51216,8 @@ const LEAGUE_QUERY = (0, _graphqlRequest.gql)`
           runners
         }
         ... on FootballGame {
-          situation {
-            ...SituationFragment
+          currentDrive {
+            ...DriveFragment
           }
         }
         ... on GolfGame {
@@ -51225,7 +51238,7 @@ const LEAGUE_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
   ${_fragments.AT_BAT_FRAGMENT}
-  ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.DRIVE_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
 `;
@@ -51275,8 +51288,8 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
         runners
       }
       ... on FootballGame {
-        situation {
-          ...SituationFragment
+        currentDrive {
+          ...DriveFragment
         }
       }
       ... on GolfGame {
@@ -51293,7 +51306,7 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.AT_BAT_FRAGMENT}
-  ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.DRIVE_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
 `;
@@ -51326,8 +51339,8 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
         runners
       }
       ... on FootballGame {
-        situation {
-          ...SituationFragment
+        currentDrive {
+          ...DriveFragment
         }
       }
       ... on GolfGame {
@@ -51347,7 +51360,7 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
   ${_fragments.AT_BAT_FRAGMENT}
-  ${_fragments.SITUATION_FRAGMENT}
+  ${_fragments.DRIVE_FRAGMENT}
   ${_fragments.TOURNAMENT_FRAGMENT}
   ${_fragments.HOLE_FRAGMENT}
 `;
@@ -51673,12 +51686,12 @@ class HotStreak {
     const {
       at_bat: atBat,
       clocks,
+      current_drive: currentDrive,
       id,
       event,
       lineup,
       pitch_counts: pitchCounts,
       runners,
-      situation,
       scores,
       status,
       timestamp
@@ -51735,30 +51748,41 @@ class HotStreak {
       game.runners = runners;
     }
 
-    if (situation) {
+    if (currentDrive) {
       const {
-        down,
-        distance,
+        current_play: currentPlay,
         id,
-        location_id,
-        possession_id,
-        yardline
-      } = situation;
-      game.situation = {
-        __typename: 'Situation',
+        possession
+      } = currentDrive;
+      game.currentDrive = {
+        __typename: 'Drive',
         id,
-        down,
-        distance,
-        location: {
-          __typename: 'Opponent',
-          id: location_id
-        },
         possession: {
           __typename: 'Opponent',
-          id: possession_id
-        },
-        yardline
+          id: possession.id
+        }
       };
+
+      if (currentPlay) {
+        const {
+          id,
+          down,
+          distance,
+          yard_line: yardLine,
+          location
+        } = currentPlay;
+        game.currentDrive.currentPlay = {
+          __typename: 'Play',
+          id,
+          down,
+          distance,
+          location: {
+            __typename: 'Opponent',
+            id: location.id
+          },
+          yardLine
+        };
+      }
     }
 
     const parsedMarkets = Object.keys(markets).map(id => {
