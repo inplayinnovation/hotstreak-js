@@ -19,6 +19,7 @@ const AT_BAT_FRAGMENT = gql`
 
 const PLAY_FRAGMENT = gql`
   fragment PlayFragment on Play {
+    __typename
     createdAt
     distance
     down
