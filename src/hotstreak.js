@@ -237,7 +237,7 @@ class HotStreak {
       }
     }
 
-    let parsedMarkets;
+    let parsedMarkets = null;
     if (markets) {
       parsedMarkets = Object.keys(markets).map(id => {
         const [probabilities, lines, durations, affinity, options] =
