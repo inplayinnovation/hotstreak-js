@@ -148,13 +148,13 @@ class HotStreak {
       id,
       event,
       lineup,
+      markets,
       pitch_counts: pitchCounts,
       runners,
       scores,
       status,
       timestamp
     } = gameUpdate;
-    const markets = gameUpdate.markets || {};
 
     if (this._lastTimestamp && timestamp < this._lastTimestamp) {
       return;
@@ -237,28 +237,31 @@ class HotStreak {
       }
     }
 
-    const parsedMarkets = Object.keys(markets).map(id => {
-      const [probabilities, lines, durations, affinity, options] =
-        markets[id].split('|');
+    let parsedMarkets;
+    if (markets) {
+      parsedMarkets = Object.keys(markets).map(id => {
+        const [probabilities, lines, durations, affinity, options] =
+          markets[id].split('|');
 
-      const market = {
-        __typename: 'Market',
-        id,
-        affinity: parseFloat(affinity),
-        durations: durations ? durations.split(',').map(parseFloat) : null,
-        game: {
-          __typename: 'Game',
-          id: gameId
-        },
-        lines: lines.split(',').map(parseFloat),
-        options: parseInt(options),
-        probabilities: probabilities.split(',').map(parseFloat)
-      };
+        const market = {
+          __typename: 'Market',
+          id,
+          affinity: parseFloat(affinity),
+          durations: durations ? durations.split(',').map(parseFloat) : null,
+          game: {
+            __typename: 'Game',
+            id: gameId
+          },
+          lines: lines.split(',').map(parseFloat),
+          options: parseInt(options),
+          probabilities: probabilities.split(',').map(parseFloat)
+        };
 
-      Object.assign(market, marketIdToJson(id));
+        Object.assign(market, marketIdToJson(id));
 
-      return market;
-    });
+        return market;
+      });
+    }
 
     callback(game, parsedMarkets);
   }
