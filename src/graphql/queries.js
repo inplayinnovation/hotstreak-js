@@ -21,9 +21,6 @@ const GAME_QUERY = gql`
   query GameQuery($id: ID!) {
     game(id: $id) {
       ...GameFragment
-      league {
-        ...LeagueFragment
-      }
       markets {
         ...MarketFragment
       }
@@ -77,10 +74,6 @@ const LEAGUE_QUERY = gql`
       ...LeagueFragment
       games {
         ...GameFragment
-        league {
-          __typename
-          id
-        }
         markets {
           ...MarketFragment
         }
@@ -159,9 +152,6 @@ const LIGHT_GAMES_QUERY = gql`
   query LightGamesQuery {
     games {
       ...GameFragment
-      league {
-        ...LeagueFragment
-      }
       opponents {
         ...OpponentFragment
       }
@@ -201,9 +191,6 @@ const HEAVY_GAMES_QUERY = gql`
   query HeavyGamesQuery($status: String) {
     games(status: $status) {
       ...GameFragment
-      league {
-        ...LeagueFragment
-      }
       markets {
         ...MarketFragment
       }
@@ -287,9 +274,7 @@ const PREDICTIONS_QUERY = gql`
       opponent {
         ...OpponentFragment
         game {
-          league {
-            ...LeagueFragment
-          }
+          leagueId
         }
         participants {
           ...ParticipantFragment
@@ -303,9 +288,7 @@ const PREDICTIONS_QUERY = gql`
         opponent {
           ...OpponentFragment
           game {
-            league {
-              ...LeagueFragment
-            }
+            leagueId
           }
         }
         player {

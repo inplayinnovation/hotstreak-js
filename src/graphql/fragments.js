@@ -72,10 +72,7 @@ const GAME_FRAGMENT = gql`
     elapsed
     event
     id
-    league {
-      __typename
-      id
-    }
+    leagueId
     opponents {
       __typename
       id
