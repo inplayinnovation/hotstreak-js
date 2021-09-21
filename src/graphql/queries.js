@@ -273,9 +273,6 @@ const PREDICTIONS_QUERY = gql`
       ...PredictionFragment
       opponent {
         ...OpponentFragment
-        game {
-          leagueId
-        }
         participants {
           ...ParticipantFragment
           player {
@@ -287,9 +284,6 @@ const PREDICTIONS_QUERY = gql`
         ...ParticipantFragment
         opponent {
           ...OpponentFragment
-          game {
-            leagueId
-          }
         }
         player {
           ...PlayerFragment

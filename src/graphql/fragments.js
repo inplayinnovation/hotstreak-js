@@ -166,10 +166,7 @@ const OPPONENT_FRAGMENT = gql`
   fragment OpponentFragment on Opponent {
     __typename
     designation
-    game {
-      __typename
-      id
-    }
+    gameId
     id
     team {
       ...TeamFragment
