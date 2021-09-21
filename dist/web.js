@@ -51163,7 +51163,6 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
     }
   }
   ${_fragments.GAME_FRAGMENT}
-  ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.MARKET_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
@@ -51285,7 +51284,6 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
     }
   }
   ${_fragments.GAME_FRAGMENT}
-  ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.AT_BAT_FRAGMENT}
   ${_fragments.DRIVE_FRAGMENT}
@@ -51333,7 +51331,6 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
     }
   }
   ${_fragments.GAME_FRAGMENT}
-  ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.MARKET_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
@@ -51408,7 +51405,6 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
   }
   ${_fragments.PREDICTION_FRAGMENT}
   ${_fragments.OPPONENT_FRAGMENT}
-  ${_fragments.LEAGUE_FRAGMENT}
   ${_fragments.PARTICIPANT_FRAGMENT}
   ${_fragments.PLAYER_FRAGMENT}
   ${_fragments.SCORECARD_FRAGMENT}
