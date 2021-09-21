@@ -179,10 +179,7 @@ const PARTICIPANT_FRAGMENT = gql`
   fragment ParticipantFragment on Participant {
     __typename
     id
-    opponent {
-      __typename
-      id
-    }
+    opponentId
     order
     player {
       __typename

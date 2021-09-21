@@ -282,9 +282,6 @@ const PREDICTIONS_QUERY = gql`
       }
       participant {
         ...ParticipantFragment
-        opponent {
-          ...OpponentFragment
-        }
         player {
           ...PlayerFragment
         }
