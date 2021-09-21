@@ -50994,10 +50994,7 @@ const PARTICIPANT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment ParticipantFragment on Participant {
     __typename
     id
-    opponent {
-      __typename
-      id
-    }
+    opponentId
     order
     player {
       __typename
@@ -51391,9 +51388,6 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
       }
       participant {
         ...ParticipantFragment
-        opponent {
-          ...OpponentFragment
-        }
         player {
           ...PlayerFragment
         }
