@@ -50887,10 +50887,7 @@ const GAME_FRAGMENT = (0, _graphqlRequest.gql)`
     elapsed
     event
     id
-    league {
-      __typename
-      id
-    }
+    leagueId
     opponents {
       __typename
       id
@@ -51136,9 +51133,6 @@ const GAME_QUERY = (0, _graphqlRequest.gql)`
   query GameQuery($id: ID!) {
     game(id: $id) {
       ...GameFragment
-      league {
-        ...LeagueFragment
-      }
       markets {
         ...MarketFragment
       }
@@ -51192,10 +51186,6 @@ const LEAGUE_QUERY = (0, _graphqlRequest.gql)`
       ...LeagueFragment
       games {
         ...GameFragment
-        league {
-          __typename
-          id
-        }
         markets {
           ...MarketFragment
         }
@@ -51274,9 +51264,6 @@ const LIGHT_GAMES_QUERY = (0, _graphqlRequest.gql)`
   query LightGamesQuery {
     games {
       ...GameFragment
-      league {
-        ...LeagueFragment
-      }
       opponents {
         ...OpponentFragment
       }
@@ -51316,9 +51303,6 @@ const HEAVY_GAMES_QUERY = (0, _graphqlRequest.gql)`
   query HeavyGamesQuery($status: String) {
     games(status: $status) {
       ...GameFragment
-      league {
-        ...LeagueFragment
-      }
       markets {
         ...MarketFragment
       }
@@ -51402,9 +51386,7 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
       opponent {
         ...OpponentFragment
         game {
-          league {
-            ...LeagueFragment
-          }
+          leagueId
         }
         participants {
           ...ParticipantFragment
@@ -51418,9 +51400,7 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
         opponent {
           ...OpponentFragment
           game {
-            league {
-              ...LeagueFragment
-            }
+            leagueId
           }
         }
         player {
