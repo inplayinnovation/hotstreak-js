@@ -50981,10 +50981,7 @@ const OPPONENT_FRAGMENT = (0, _graphqlRequest.gql)`
   fragment OpponentFragment on Opponent {
     __typename
     designation
-    game {
-      __typename
-      id
-    }
+    gameId
     id
     team {
       ...TeamFragment
@@ -51385,9 +51382,6 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
       ...PredictionFragment
       opponent {
         ...OpponentFragment
-        game {
-          leagueId
-        }
         participants {
           ...ParticipantFragment
           player {
@@ -51399,9 +51393,6 @@ const PREDICTIONS_QUERY = (0, _graphqlRequest.gql)`
         ...ParticipantFragment
         opponent {
           ...OpponentFragment
-          game {
-            leagueId
-          }
         }
         player {
           ...PlayerFragment
