@@ -63,10 +63,6 @@ class HotStreak {
     return this._api.gameQuery(id);
   }
 
-  fetchGames(status) {
-    return this._api.gamesQuery(status);
-  }
-
   fetchLeague(id) {
     return this._api.leagueQuery(id);
   }

@@ -65,7 +65,7 @@ const EVENT_FRAGMENT = gql`
 `;
 
 const GAME_FRAGMENT = gql`
-  fragment GameFragment on Game {
+  fragment GameFragment on GameInterface {
     __typename
     broadcastChannel
     clock

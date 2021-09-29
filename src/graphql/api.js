@@ -4,8 +4,6 @@ import {
   GAME_QUERY,
   LEAGUE_QUERY,
   LEAGUES_QUERY,
-  LIGHT_GAMES_QUERY,
-  HEAVY_GAMES_QUERY,
   MARKET_QUERY,
   PREDICTION_QUERY,
   PREDICTIONS_QUERY,
@@ -37,14 +35,6 @@ class API {
     const { game } = await this._graphQLClient.request(GAME_QUERY, variables);
     this._fixGame(game);
     return game;
-  }
-
-  async gamesQuery(status) {
-    const query = status ? HEAVY_GAMES_QUERY : LIGHT_GAMES_QUERY;
-    const variables = status ? { status } : null;
-    const { games } = await this._graphQLClient.request(query, variables);
-    games.forEach(this._fixGame);
-    return games;
   }
 
   async leagueQuery(id) {

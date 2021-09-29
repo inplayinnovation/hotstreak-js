@@ -55,10 +55,10 @@ const hotstreak = new HotStreak({
 ## Subscribing to a game:
 
 ```javascript
-const games = await hotstreak.fetchGames();
-// TODO: push games to your store
+const leagues = await hotstreak.fetchLeagues();
+// TODO: push leagues to your store
 
-hotstreak.subscribe(games[0], (game, markets) => {
+hotstreak.subscribe(leagues[0], (game, markets) => {
   // TODO: push game & markets to your store
   console.log(game);
   console.log(markets);

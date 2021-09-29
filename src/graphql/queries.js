@@ -147,94 +147,6 @@ const LEAGUES_QUERY = gql`
   ${AT_BAT_FRAGMENT}
 `;
 
-const LIGHT_GAMES_QUERY = gql`
-  query LightGamesQuery {
-    games {
-      ...GameFragment
-      opponents {
-        ...OpponentFragment
-      }
-      ... on BaseballGame {
-        atBat {
-          ...AtBatFragment
-        }
-        lineup
-        pitchCounts
-        runners
-      }
-      ... on FootballGame {
-        currentDrive {
-          ...DriveFragment
-        }
-      }
-      ... on GolfGame {
-        tournament {
-          ...TournamentFragment
-          holes {
-            ...HoleFragment
-          }
-        }
-      }
-    }
-  }
-  ${GAME_FRAGMENT}
-  ${OPPONENT_FRAGMENT}
-  ${AT_BAT_FRAGMENT}
-  ${DRIVE_FRAGMENT}
-  ${TOURNAMENT_FRAGMENT}
-  ${HOLE_FRAGMENT}
-`;
-
-const HEAVY_GAMES_QUERY = gql`
-  query HeavyGamesQuery($status: String) {
-    games(status: $status) {
-      ...GameFragment
-      markets {
-        ...MarketFragment
-      }
-      opponents {
-        ...OpponentFragment
-        participants {
-          ...ParticipantFragment
-          player {
-            ...PlayerFragment
-          }
-        }
-      }
-      ... on BaseballGame {
-        atBat {
-          ...AtBatFragment
-        }
-        lineup
-        pitchCounts
-        runners
-      }
-      ... on FootballGame {
-        currentDrive {
-          ...DriveFragment
-        }
-      }
-      ... on GolfGame {
-        tournament {
-          ...TournamentFragment
-          holes {
-            ...HoleFragment
-          }
-        }
-      }
-    }
-  }
-  ${GAME_FRAGMENT}
-  ${MARKET_FRAGMENT}
-  ${OPPONENT_FRAGMENT}
-  ${PARTICIPANT_FRAGMENT}
-  ${PLAYER_FRAGMENT}
-  ${AT_BAT_FRAGMENT}
-  ${DRIVE_FRAGMENT}
-  ${TOURNAMENT_FRAGMENT}
-  ${HOLE_FRAGMENT}
-`;
-
 const MARKET_QUERY = gql`
   query MarketQuery($gameId: ID!, $marketId: ID!) {
     market(gameId: $gameId, marketId: $marketId) {
@@ -319,8 +231,6 @@ export {
   GAME_QUERY,
   LEAGUE_QUERY,
   LEAGUES_QUERY,
-  LIGHT_GAMES_QUERY,
-  HEAVY_GAMES_QUERY,
   MARKET_QUERY,
   PREDICTION_QUERY,
   PREDICTIONS_QUERY,
